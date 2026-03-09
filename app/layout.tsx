@@ -6,14 +6,14 @@ export const metadata: Metadata = {
   description:
     "Send, swap, and interact with any contract on Flare without holding FLR for gas.",
   icons: {
-    icon: "https://image2url.com/r2/default/images/1773047373605-4fb22ebb-f299-4f61-b949-c5b42c484cef.jpg",
+    icon: "https://i.ibb.co/XZJsq6QB/photo-2026-03-09-10-09-22-removebg-preview.png",
   },
   openGraph: {
     title: "Strills Paymaster — Gasless Transactions on Flare",
     description:
       "Gasless transfers, swaps, and contract calls on Flare. Fees in USDT, FXRP, or WC2FLR.",
     images: [
-      "https://image2url.com/r2/default/images/1773047373605-4fb22ebb-f299-4f61-b949-c5b42c484cef.jpg",
+      "https://i.ibb.co/XZJsq6QB/photo-2026-03-09-10-09-22-removebg-preview.png",
     ],
   },
 };

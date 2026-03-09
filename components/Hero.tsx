@@ -44,15 +44,6 @@ export default function Hero() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="w-full max-w-3xl pb-6 pt-2"
         >
-          <h2 className="mb-3 text-[1.6rem] sm:text-[1.9rem] font-semibold text-purple-200">
-            One-click gasless protection for every transaction.
-          </h2>
-          <p className="mb-8 text-sm sm:text-[0.92rem] text-purple-200/70 leading-relaxed">
-            Your users sign a single intent; Strills routes transfers, swaps, and contract calls
-            through a dedicated relayer that pays FLR gas on-chain and settles protocol fees in
-            tokens they already hold.
-          </p>
-
           {/* Fee tokens — minimal inline list */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
