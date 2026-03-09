@@ -1,11 +1,7 @@
 "use client";
 
 import Link from "next/link";
-const links = [
-  { label: "DeFi App", href: "#" },
-  { label: "Features", href: "#features" },
-  { label: "Docs", href: "/docs" },
-];
+const links = [{ label: "Docs", href: "/docs" }];
 
 export default function Navbar() {
   return (

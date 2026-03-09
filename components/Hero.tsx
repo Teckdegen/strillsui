@@ -14,83 +14,76 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center text-center">
-        {/* Small pill */}
+        {/* Section 1: brand wordmark */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-[11px] font-medium text-white/60"
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="flex min-h-[60vh] w-full flex-col items-center justify-center space-y-6"
         >
-          <span className="h-1 w-1 rounded-full bg-emerald-400" />
-          Live on Flare · Coston2
-        </motion.div>
-
-        {/* Core headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.2 }}
-          className="mb-4 text-[2.6rem] leading-[1.05] text-white sm:text-[3.2rem] md:text-[3.6rem] font-semibold"
-        >
-          One-click gasless protection
-          <br />
-          <span className="gradient-text">for every Flare wallet</span>
-        </motion.h1>
-
-        {/* Supporting copy */}
-        <motion.p
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.35 }}
-          className="mb-9 max-w-xl text-sm sm:text-[0.92rem] text-white/55 leading-relaxed"
-        >
-          Strills routes transfers, swaps, and contract calls through a dedicated paymaster — so
-          your users never touch FLR. Fees settle in USDT, FXRP, or WFLR while the relayer handles gas.
-        </motion.p>
-
-        {/* Primary CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.5 }}
-          className="mb-10 flex flex-col items-center gap-3 sm:flex-row"
-        >
+          <h1 className="text-[3.4rem] sm:text-[4.3rem] md:text-[4.9rem] tracking-[0.25em] font-semibold text-white/95">
+            STRILLS
+          </h1>
+          <p className="max-w-md text-xs sm:text-sm text-white/55 uppercase tracking-[0.24em]">
+            GASLESS PAYMASTER FOR FLARE
+          </p>
           <Link
-            href="/docs"
-            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 px-7 py-2.5 text-sm font-semibold text-white/85 hover:bg-white/12 hover:text-white transition-colors"
+            href="#details"
+            className="mt-4 inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 px-8 py-2.5 text-xs font-semibold tracking-[0.18em] text-white/85 hover:bg-white/14 hover:text-white transition-colors"
           >
-            Open Developer Docs
-          </Link>
-          <Link
-            href="#features"
-            className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/5 px-6 py-2 text-sm font-medium text-white/75 hover:bg-white/10 transition-colors"
-          >
-            Discover the flow
+            GET STARTED
           </Link>
         </motion.div>
 
-        {/* Corner labels */}
+        {/* Section 2: details, revealed on scroll */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="grid w-full max-w-3xl grid-cols-2 gap-3 text-[11px] text-white/35 sm:grid-cols-4"
+          id="details"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="w-full max-w-3xl pb-6 pt-2"
         >
-          <div className="text-left sm:text-center">
-            <div className="font-medium text-white/60">USDT · FXRP · WFLR</div>
-            <div>Fee tokens</div>
+          <h2 className="mb-3 text-[1.6rem] sm:text-[1.9rem] font-semibold text-white">
+            One-click gasless protection for every transaction.
+          </h2>
+          <p className="mb-7 text-sm sm:text-[0.92rem] text-white/60 leading-relaxed">
+            Your users sign a single intent; Strills routes transfers, swaps, and contract calls
+            through a dedicated relayer that pays FLR gas on-chain and settles protocol fees in
+            tokens they already hold.
+          </p>
+
+          <div className="mb-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+            <div className="flex gap-2">
+              {["USDT", "FXRP", "WFLR"].map((label) => (
+                <span
+                  key={label}
+                  className="rounded-full border border-white/18 bg-white/6 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-white/70"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2 text-[10px] text-white/45">
+              <span className="rounded-full border border-white/12 bg-white/4 px-3 py-1">
+                EIP‑712 intents
+              </span>
+              <span className="rounded-full border border-white/12 bg-white/4 px-3 py-1">
+                Relayer pays gas
+              </span>
+            </div>
           </div>
-          <div className="text-right sm:text-center">
-            <div className="font-medium text-white/60">Transfers &amp; swaps</div>
-            <div>Single intent</div>
-          </div>
-          <div className="hidden sm:block text-left">
-            <div className="font-medium text-white/60">Relayer wallet</div>
-            <div>Pays native gas</div>
-          </div>
-          <div className="hidden sm:block text-right">
-            <div className="font-medium text-white/60">EIP‑712</div>
-            <div>Non-custodial signatures</div>
+
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between text-[11px] text-white/40">
+            <div className="flex flex-col items-center sm:items-start gap-1">
+              <span className="text-white/65">Transfers &amp; swaps</span>
+              <span>Single signature</span>
+            </div>
+            <div className="hidden h-px flex-1 bg-gradient-to-r from-white/10 via-white/30 to-white/10 sm:block" />
+            <div className="flex flex-col items-center sm:items-end gap-1">
+              <span className="text-white/65">Any contract call</span>
+              <span>Non‑custodial wallet</span>
+            </div>
           </div>
         </motion.div>
       </div>
