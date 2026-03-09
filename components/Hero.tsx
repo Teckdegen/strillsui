@@ -34,7 +34,11 @@ export default function Hero() {
         <motion.div
           key={t.symbol}
           className="absolute hidden lg:flex items-center gap-2 glass px-4 py-2.5 rounded-2xl"
-          style={{ borderColor: `${t.color}30` }}
+          style={{
+            borderColor: `${t.color}30`,
+            left: `calc(50% + ${t.x}px)`,
+            top: `calc(50% + ${t.y}px)`,
+          }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{
             opacity: 1,
@@ -47,12 +51,6 @@ export default function Hero() {
             y: { delay: t.delay, duration: 4 + t.delay * 0.5, repeat: Infinity, ease: "easeInOut" },
           }}
           whileHover={{ scale: 1.08 }}
-          style2={{
-            left: `calc(50% + ${t.x}px)`,
-            top: `calc(50% + ${t.y}px)`,
-          }}
-          // Note: using CSS transform offset from center
-          initial2={{ x: t.x, y: t.y }}
         >
           <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ background: t.color }}>
             {t.symbol[0]}
