@@ -1,5 +1,4 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
-import { Zap, ArrowRight, Shield, Coins } from "lucide-react";
 
 export const metadata = { title: "Introduction — Strills Pay Docs" };
 
@@ -36,7 +35,7 @@ export default function DocsIntro() {
 
       <div className="mb-10">
         <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-3 py-1 text-xs text-purple-400 mb-5">
-          <Zap className="w-3 h-3" /> Strills Paymaster SDK
+          Strills Paymaster SDK
         </div>
         <h1 className="text-4xl font-bold text-white mb-4 leading-tight">
           Gasless Transactions on Flare
@@ -51,25 +50,19 @@ export default function DocsIntro() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
         {[
           {
-            icon: Zap,
             title: "Zero FLR",
             desc: "Users never need native gas tokens. Sign once, we handle the rest.",
           },
           {
-            icon: Coins,
             title: "Any Fee Token",
             desc: "Pay in USDT, FXRP, or WC2FLR. Your choice at signing time.",
           },
           {
-            icon: Shield,
             title: "Non-Custodial",
             desc: "EIP-712 signatures. Your keys stay yours — always.",
           },
-        ].map(({ icon: Icon, title, desc }) => (
+        ].map(({ title, desc }) => (
           <div key={title} className="glass p-4 rounded-xl">
-            <div className="w-8 h-8 rounded-lg bg-purple-600/20 flex items-center justify-center mb-3">
-              <Icon className="w-4 h-4 text-purple-400" />
-            </div>
             <div className="text-sm font-semibold text-white mb-1">{title}</div>
             <div className="text-xs text-white/40 leading-relaxed">{desc}</div>
           </div>

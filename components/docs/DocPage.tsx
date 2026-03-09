@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Copy, Check } from "lucide-react";
 import { useState } from "react";
 
 export function Breadcrumb({ items }: { items: { label: string; href?: string }[] }) {
@@ -36,9 +35,8 @@ export function DocNav({
       {prev ? (
         <Link
           href={prev.href}
-          className="flex items-center gap-2 glass px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:border-purple-600/30 transition-all duration-200 group"
+          className="flex items-center gap-2 glass px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:border-purple-600/30 transition-all duration-200"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <div className="text-left">
             <div className="text-xs text-white/30">Previous</div>
             <div>{prev.label}</div>
@@ -50,13 +48,12 @@ export function DocNav({
       {next && (
         <Link
           href={next.href}
-          className="flex items-center gap-2 glass px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:border-purple-600/30 transition-all duration-200 group"
+          className="flex items-center gap-2 glass px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:border-purple-600/30 transition-all duration-200"
         >
           <div className="text-right">
             <div className="text-xs text-white/30">Next</div>
             <div>{next.label}</div>
           </div>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       )}
     </div>
@@ -80,11 +77,7 @@ export function CodeBlock({ code, language = "typescript" }: { code: string; lan
           onClick={copy}
           className="flex items-center gap-1.5 text-xs text-white/30 hover:text-white/70 transition-colors"
         >
-          {copied ? (
-            <><Check className="w-3.5 h-3.5 text-green-400" /><span className="text-green-400">Copied</span></>
-          ) : (
-            <><Copy className="w-3.5 h-3.5" /><span>Copy</span></>
-          )}
+          <span className={copied ? "text-green-400" : ""}>{copied ? "Copied" : "Copy"}</span>
         </button>
       </div>
       <pre className="p-5 overflow-x-auto text-sm text-purple-300 font-mono leading-relaxed">

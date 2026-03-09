@@ -4,12 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Zap, BookOpen, Code2, ArrowLeftRight, Shield, Layers } from "lucide-react";
 
 const nav = [
   {
     title: "Overview",
-    icon: BookOpen,
     items: [
       { label: "Introduction", href: "/docs" },
       { label: "Getting Started", href: "/docs/getting-started" },
@@ -17,7 +15,6 @@ const nav = [
   },
   {
     title: "SDK Reference",
-    icon: Code2,
     items: [
       { label: "transfer()", href: "/docs/sdk" },
       { label: "transferAll()", href: "/docs/sdk/transfer-all" },
@@ -28,7 +25,6 @@ const nav = [
   },
   {
     title: "Transactions",
-    icon: ArrowLeftRight,
     items: [
       { label: "ERC20 Transfer", href: "/docs/transactions" },
       { label: "Send All", href: "/docs/transactions/send-all" },
@@ -39,7 +35,6 @@ const nav = [
   },
   {
     title: "Contracts",
-    icon: Layers,
     items: [
       { label: "GaslessRouter", href: "/docs/contracts" },
       { label: "Addresses", href: "/docs/contracts/addresses" },
@@ -47,7 +42,6 @@ const nav = [
   },
   {
     title: "Security",
-    icon: Shield,
     items: [
       { label: "How Signatures Work", href: "/docs/security" },
       { label: "Replay Protection", href: "/docs/security/replay" },
@@ -60,23 +54,17 @@ function NavSection({ section }: { section: (typeof nav)[0] }) {
   const pathname = usePathname();
   const isActive = section.items.some((i) => i.href === pathname);
   const [open, setOpen] = useState<boolean>(true);
-  const Icon = section.icon;
 
   return (
     <div className="mb-1">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.03] transition-colors duration-200 group"
+        className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.03] transition-colors duration-200"
       >
-        <div className="flex items-center gap-2.5">
-          <Icon className="w-3.5 h-3.5 text-purple-400/70" />
-          <span className="text-xs font-semibold text-white/40 uppercase tracking-widest group-hover:text-white/60 transition-colors">
-            {section.title}
-          </span>
-        </div>
-        <ChevronDown
-          className={`w-3.5 h-3.5 text-white/20 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
+        <span className="text-xs font-semibold text-white/40 uppercase tracking-widest">
+          {section.title}
+        </span>
+        <span className="text-[10px] text-white/30">{open ? "−" : "+"}</span>
       </button>
 
       <AnimatePresence initial={false}>
@@ -125,9 +113,6 @@ export default function Sidebar() {
       <div className="sticky top-0 h-screen overflow-y-auto py-6 flex flex-col">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 px-4 mb-8">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-600 to-purple-400 flex items-center justify-center">
-            <Zap className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
-          </div>
           <span className="font-bold text-base text-white">
             Strills <span className="gradient-text">Pay</span>
           </span>
