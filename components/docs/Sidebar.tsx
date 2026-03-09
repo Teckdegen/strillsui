@@ -59,7 +59,7 @@ const nav = [
 function NavSection({ section }: { section: (typeof nav)[0] }) {
   const pathname = usePathname();
   const isActive = section.items.some((i) => i.href === pathname);
-  const [open, setOpen] = useState(isActive || true);
+  const [open, setOpen] = useState<boolean>(true);
   const Icon = section.icon;
 
   return (
