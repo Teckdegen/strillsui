@@ -2,167 +2,98 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Zap } from "lucide-react";
-
-const floatingTokens = [
-  { symbol: "USDT", color: "#26a17b", delay: 0, x: -280, y: -60 },
-  { symbol: "FXRP", color: "#346aa9", delay: 1.2, x: 280, y: -80 },
-  { symbol: "WFLR", color: "#e84142", delay: 0.6, x: -240, y: 120 },
-  { symbol: "FLR", color: "#7c3aed", delay: 1.8, x: 260, y: 100 },
-];
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
-      {/* Background orbs */}
-      <div className="orb w-[600px] h-[600px] bg-purple-700 top-[-100px] left-1/2 -translate-x-1/2 opacity-20" />
-      <div className="orb w-[400px] h-[400px] bg-purple-500 bottom-0 right-0 opacity-10" style={{ animationDelay: "2s" }} />
-      <div className="orb w-[300px] h-[300px] bg-violet-800 top-1/4 left-0 opacity-10" style={{ animationDelay: "1s" }} />
+    <section className="relative overflow-hidden px-8 pb-14 pt-10">
+      {/* Soft spotlight */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,_rgba(168,85,247,0.15),_transparent_60%)] blur-3xl" />
+        <div className="absolute bottom-[-200px] right-[-120px] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(79,70,229,0.5),_transparent_60%)] blur-3xl opacity-70" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(15,23,42,0.9),_transparent_60%)] mix-blend-screen opacity-80" />
+      </div>
 
-      {/* Animated grid lines */}
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(124,58,237,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,0.8) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
-
-      {/* Floating token badges */}
-      {floatingTokens.map((t) => (
+      <div className="relative z-10 flex flex-col items-center text-center">
+        {/* Small pill */}
         <motion.div
-          key={t.symbol}
-          className="absolute hidden lg:flex items-center gap-2 glass px-4 py-2.5 rounded-2xl"
-          style={{
-            borderColor: `${t.color}30`,
-            left: `calc(50% + ${t.x}px)`,
-            top: `calc(50% + ${t.y}px)`,
-          }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            y: [0, -12, 0],
-          }}
-          transition={{
-            opacity: { delay: t.delay + 1, duration: 0.5 },
-            scale: { delay: t.delay + 1, duration: 0.5 },
-            y: { delay: t.delay, duration: 4 + t.delay * 0.5, repeat: Infinity, ease: "easeInOut" },
-          }}
-          whileHover={{ scale: 1.08 }}
-        >
-          <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ background: t.color }}>
-            {t.symbol[0]}
-          </div>
-          <span className="text-xs font-semibold text-white/80">{t.symbol}</span>
-          <span className="text-xs text-green-400 font-medium">✓ gasless</span>
-        </motion.div>
-      ))}
-
-      {/* Main content */}
-      <div className="relative z-10 text-center max-w-4xl mx-auto">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="inline-flex items-center gap-2 glass px-4 py-1.5 rounded-full mb-8 border-purple-600/30"
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-[11px] font-medium text-white/60"
         >
-          <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          <span className="text-xs text-white/60 font-medium">Live on Flare · Coston2 Testnet</span>
+          <span className="h-1 w-1 rounded-full bg-emerald-400" />
+          Live on Flare · Coston2
         </motion.div>
 
-        {/* Headline */}
+        {/* Core headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.35 }}
-          className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.08] tracking-tight mb-6"
+          transition={{ duration: 0.55, delay: 0.2 }}
+          className="mb-4 text-[2.6rem] leading-[1.05] text-white sm:text-[3.2rem] md:text-[3.6rem] font-semibold"
         >
-          <span className="text-white">Transact on Flare</span>
+          One-click gasless protection
           <br />
-          <span className="gradient-text">without gas</span>
+          <span className="gradient-text">for every Flare wallet</span>
         </motion.h1>
 
-        {/* Subtext */}
+        {/* Supporting copy */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-lg text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed"
+          transition={{ duration: 0.5, delay: 0.35 }}
+          className="mb-9 max-w-xl text-sm sm:text-[0.92rem] text-white/55 leading-relaxed"
         >
-          Send tokens, swap on BlazeSwap, and call any smart contract on Flare —
-          all without holding a single FLR. Pay fees in USDT, FXRP, or WFLR.
+          Strills routes transfers, swaps, and contract calls through a dedicated paymaster — so
+          your users never touch FLR. Fees settle in USDT, FXRP, or WFLR while the relayer handles gas.
         </motion.p>
 
-        {/* CTA Buttons */}
+        {/* Primary CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.65 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          transition={{ duration: 0.45, delay: 0.5 }}
+          className="mb-10 flex flex-col items-center gap-3 sm:flex-row"
         >
           <Link
             href="/docs"
-            className="btn-purple px-7 py-3.5 rounded-2xl text-sm font-semibold text-white flex items-center gap-2 group"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-violet-400 px-7 py-2.5 text-sm font-semibold text-black shadow-[0_0_40px_rgba(167,139,250,0.7)] hover:brightness-110 transition-all"
           >
-            <span>Read the Docs</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+            Open Developer Docs
           </Link>
           <Link
-            href="#transactions"
-            className="glass px-7 py-3.5 rounded-2xl text-sm font-semibold text-white/70 hover:text-white hover:border-purple-600/40 transition-all duration-300 flex items-center gap-2"
+            href="#features"
+            className="inline-flex items-center justify-center rounded-full border border-white/16 bg-white/5 px-6 py-2 text-sm font-medium text-white/75 hover:bg-white/10 transition-colors"
           >
-            <Zap className="w-4 h-4 text-purple-400" />
-            <span>See What's Possible</span>
+            Discover the flow
           </Link>
         </motion.div>
 
-        {/* Token ticker */}
+        {/* Corner labels */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="flex items-center justify-center gap-3 mt-14 flex-wrap"
+          transition={{ delay: 0.8 }}
+          className="grid w-full max-w-3xl grid-cols-2 gap-3 text-[11px] text-white/35 sm:grid-cols-4"
         >
-          {["USDT", "FXRP", "WFLR", "Any ERC20"].map((t, i) => (
-            <motion.span
-              key={t}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.1 + i * 0.1 }}
-              className="token-badge"
-            >
-              {t}
-            </motion.span>
-          ))}
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.6 }}
-            className="text-xs text-white/30"
-          >
-            accepted as fee tokens
-          </motion.span>
+          <div className="text-left sm:text-center">
+            <div className="font-medium text-white/60">USDT · FXRP · WFLR</div>
+            <div>Fee tokens</div>
+          </div>
+          <div className="text-right sm:text-center">
+            <div className="font-medium text-white/60">Transfers &amp; swaps</div>
+            <div>Single intent</div>
+          </div>
+          <div className="hidden sm:block text-left">
+            <div className="font-medium text-white/60">Relayer wallet</div>
+            <div>Pays native gas</div>
+          </div>
+          <div className="hidden sm:block text-right">
+            <div className="font-medium text-white/60">EIP‑712</div>
+            <div>Non-custodial signatures</div>
+          </div>
         </motion.div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-5 h-8 glass rounded-full flex items-start justify-center pt-1.5"
-        >
-          <div className="w-1 h-2 bg-purple-400 rounded-full" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }
