@@ -44,47 +44,70 @@ export default function Hero() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="w-full max-w-3xl pb-6 pt-2"
         >
-          <h2 className="mb-3 text-[1.6rem] sm:text-[1.9rem] font-semibold text-white">
+          <h2 className="mb-3 text-[1.6rem] sm:text-[1.9rem] font-semibold text-purple-200">
             One-click gasless protection for every transaction.
           </h2>
-          <p className="mb-7 text-sm sm:text-[0.92rem] text-white/60 leading-relaxed">
+          <p className="mb-7 text-sm sm:text-[0.92rem] text-purple-200/70 leading-relaxed">
             Your users sign a single intent; Strills routes transfers, swaps, and contract calls
             through a dedicated relayer that pays FLR gas on-chain and settles protocol fees in
             tokens they already hold.
           </p>
 
-          <div className="mb-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-            <div className="flex gap-2">
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={{
+              hidden: {},
+              show: {
+                transition: { staggerChildren: 0.06 },
+              },
+            }}
+            className="mb-4 grid gap-4 rounded-2xl bg-[rgba(17,24,39,0.88)] p-4 text-left text-sm text-purple-100 sm:grid-cols-2"
+          >
+            <motion.ul
+              variants={{ hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0 } }}
+              className="space-y-2"
+            >
+              <li className="text-[11px] font-medium uppercase tracking-[0.18em] text-purple-300/80">
+                Fee Tokens
+              </li>
               {["USDT", "FXRP", "WFLR"].map((label) => (
-                <span
+                <motion.li
                   key={label}
-                  className="rounded-full border border-white/18 bg-white/6 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-white/70"
+                  variants={{ hidden: { opacity: 0, x: -6 }, show: { opacity: 1, x: 0 } }}
+                  className="flex items-center gap-2 text-[12px] text-purple-100/90"
                 >
-                  {label}
-                </span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400/80" />
+                  <span className="uppercase tracking-[0.16em]">{label}</span>
+                </motion.li>
               ))}
-            </div>
-            <div className="flex gap-2 text-[10px] text-white/45">
-              <span className="rounded-full border border-white/12 bg-white/4 px-3 py-1">
-                EIP‑712 intents
-              </span>
-              <span className="rounded-full border border-white/12 bg-white/4 px-3 py-1">
-                Relayer pays gas
-              </span>
-            </div>
-          </div>
+            </motion.ul>
 
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between text-[11px] text-white/40">
-            <div className="flex flex-col items-center sm:items-start gap-1">
-              <span className="text-white/65">Transfers &amp; swaps</span>
-              <span>Single signature</span>
-            </div>
-            <div className="hidden h-px flex-1 bg-gradient-to-r from-white/10 via-white/30 to-white/10 sm:block" />
-            <div className="flex flex-col items-center sm:items-end gap-1">
-              <span className="text-white/65">Any contract call</span>
-              <span>Non‑custodial wallet</span>
-            </div>
-          </div>
+            <motion.ul
+              variants={{ hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0 } }}
+              className="space-y-2"
+            >
+              <li className="text-[11px] font-medium uppercase tracking-[0.18em] text-purple-300/80">
+                Flow
+              </li>
+              {[
+                "EIP‑712 intents",
+                "Relayer pays gas",
+                "Transfers & swaps · single signature",
+                "Any contract call · non‑custodial wallet",
+              ].map((label) => (
+                <motion.li
+                  key={label}
+                  variants={{ hidden: { opacity: 0, x: 6 }, show: { opacity: 1, x: 0 } }}
+                  className="flex items-center gap-2 text-[12px] text-purple-100/90"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400/80" />
+                  <span>{label}</span>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.div>
         </motion.div>
       </div>
     </section>

@@ -161,19 +161,76 @@ body {
   50% { transform: translateY(18px); }
 }
 
-/* ─── Docs ───────────────────────────────────────────── */
-.doc-content h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: #fff; }
-.doc-content h2 { font-size: 1.4rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 0.75rem; color: #e2d9f3; }
-.doc-content h3 { font-size: 1.1rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.5rem; color: #c4b5fd; }
-.doc-content p { line-height: 1.8; color: #a1a1aa; margin-bottom: 1rem; }
-.doc-content ul { padding-left: 1.5rem; margin-bottom: 1rem; }
-.doc-content li { color: #a1a1aa; line-height: 1.8; margin-bottom: 0.25rem; list-style-type: disc; }
-.doc-content code { background: rgba(124,58,237,0.15); color: #c4b5fd; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.875rem; font-family: 'SF Mono', 'Fira Code', monospace; }
-.doc-content pre { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 0.75rem; padding: 1.25rem; overflow-x: auto; margin: 1.25rem 0; }
-.doc-content pre code { background: none; color: #a78bfa; padding: 0; font-size: 0.875rem; }
-.doc-content a { color: #a855f7; text-decoration: underline; text-underline-offset: 3px; }
-.doc-content strong { color: #fff; }
-.doc-content hr { border-color: rgba(255,255,255,0.08); margin: 2rem 0; }
+/* ─── Docs (GitBook‑style) ───────────────────────────── */
+.doc-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #020617;
+}
+.doc-content h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+}
+.doc-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+.doc-content p {
+  line-height: 1.8;
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+.doc-content ul {
+  padding-left: 1.4rem;
+  margin-bottom: 1rem;
+}
+.doc-content li {
+  color: #4b5563;
+  line-height: 1.8;
+  margin-bottom: 0.25rem;
+  list-style-type: disc;
+}
+.doc-content code {
+  background: rgba(15,23,42,0.06);
+  color: #0f172a;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.doc-content pre {
+  background: #020617;
+  border: 1px solid rgba(15,23,42,0.9);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+}
+.doc-content pre code {
+  background: none;
+  color: #e5e7eb;
+  padding: 0;
+  font-size: 0.875rem;
+}
+.doc-content a {
+  color: #4c1d95;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.doc-content strong {
+  color: #111827;
+}
+.doc-content hr {
+  border-color: rgba(148,163,184,0.4);
+  margin: 2rem 0;
+}
 
 /* ─── Token badge ─────────────────────────────────────── */
 .token-badge {

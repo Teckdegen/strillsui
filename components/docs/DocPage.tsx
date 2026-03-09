@@ -6,12 +6,12 @@ import { useState } from "react";
 
 export function Breadcrumb({ items }: { items: { label: string; href?: string }[] }) {
   return (
-    <nav className="flex items-center gap-2 text-xs text-white/30 mb-8">
+    <nav className="mb-6 flex items-center gap-2 text-xs text-slate-400">
       {items.map((item, i) => (
         <span key={item.label} className="flex items-center gap-2">
           {i > 0 && <span>/</span>}
           {item.href ? (
-            <Link href={item.href} className="hover:text-white/60 transition-colors">
+            <Link href={item.href} className="transition-colors hover:text-slate-900">
               {item.label}
             </Link>
           ) : (
@@ -31,14 +31,14 @@ export function DocNav({
   next?: { label: string; href: string };
 }) {
   return (
-    <div className="flex items-center justify-between mt-16 pt-8 border-t border-white/[0.06]">
+    <div className="mt-16 flex items-center justify-between border-t border-slate-200 pt-8">
       {prev ? (
         <Link
           href={prev.href}
-          className="flex items-center gap-2 glass px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:border-purple-600/30 transition-all duration-200"
+          className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
         >
           <div className="text-left">
-            <div className="text-xs text-white/30">Previous</div>
+            <div className="text-xs text-slate-400">Previous</div>
             <div>{prev.label}</div>
           </div>
         </Link>
@@ -48,10 +48,10 @@ export function DocNav({
       {next && (
         <Link
           href={next.href}
-          className="flex items-center gap-2 glass px-4 py-3 rounded-xl text-sm text-white/60 hover:text-white hover:border-purple-600/30 transition-all duration-200"
+          className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
         >
           <div className="text-right">
-            <div className="text-xs text-white/30">Next</div>
+            <div className="text-xs text-slate-400">Next</div>
             <div>{next.label}</div>
           </div>
         </Link>
@@ -72,10 +72,10 @@ export function CodeBlock({ code, language = "typescript" }: { code: string; lan
   return (
     <div className="code-block my-5 group">
       <div className="code-header">
-        <span className="text-xs text-purple-400/60 font-mono">{language}</span>
+        <span className="text-xs font-mono text-slate-500">{language}</span>
         <button
           onClick={copy}
-          className="flex items-center gap-1.5 text-xs text-white/30 hover:text-white/70 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-900 transition-colors"
         >
           <span className={copied ? "text-green-400" : ""}>{copied ? "Copied" : "Copy"}</span>
         </button>
