@@ -63,13 +63,13 @@ export default function Hero() {
                 transition: { staggerChildren: 0.06 },
               },
             }}
-            className="mb-4 grid gap-4 rounded-2xl bg-[rgba(17,24,39,0.88)] p-4 text-left text-sm text-purple-100 sm:grid-cols-2"
+            className="mb-4 grid gap-4 rounded-2xl border border-purple-500/20 bg-[rgba(15,23,42,0.55)] p-4 text-left text-sm text-purple-100 backdrop-blur-xl sm:grid-cols-2"
           >
             <motion.ul
               variants={{ hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0 } }}
               className="space-y-2"
             >
-              <li className="text-[11px] font-medium uppercase tracking-[0.18em] text-purple-300/80">
+              <li className="text-[11px] font-medium uppercase tracking-[0.18em] text-purple-200">
                 Fee Tokens
               </li>
               {["USDT", "FXRP", "WFLR"].map((label) => (
@@ -79,7 +79,9 @@ export default function Hero() {
                   className="flex items-center gap-2 text-[12px] text-purple-100/90"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-400/80" />
-                  <span className="uppercase tracking-[0.16em]">{label}</span>
+                  <span className="rounded-full border border-purple-500/30 bg-purple-500/15 px-3 py-1 uppercase tracking-[0.16em]">
+                    {label}
+                  </span>
                 </motion.li>
               ))}
             </motion.ul>
@@ -88,7 +90,7 @@ export default function Hero() {
               variants={{ hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0 } }}
               className="space-y-2"
             >
-              <li className="text-[11px] font-medium uppercase tracking-[0.18em] text-purple-300/80">
+              <li className="text-[11px] font-medium uppercase tracking-[0.18em] text-purple-200">
                 Flow
               </li>
               {[
@@ -103,7 +105,9 @@ export default function Hero() {
                   className="flex items-center gap-2 text-[12px] text-purple-100/90"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-400/80" />
-                  <span>{label}</span>
+                  <span className="rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1">
+                    {label}
+                  </span>
                 </motion.li>
               ))}
             </motion.ul>

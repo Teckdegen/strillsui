@@ -110,7 +110,7 @@ function NavSection({ section }: { section: (typeof nav)[0] }) {
 export default function Sidebar() {
   return (
     <aside className="hidden w-64 shrink-0 text-sm text-slate-200 lg:block">
-      <div className="sticky top-0 flex h-screen flex-col gap-4 border-r border-slate-800 bg-black/40 pt-6">
+      <div className="sticky top-0 flex h-screen flex-col gap-4 border-r border-slate-800/60 bg-transparent pt-6">
         {/* Logo */}
         <Link href="/" className="mb-4 flex items-center gap-2 px-4">
           <span className="text-sm font-semibold text-slate-100">
