@@ -28,7 +28,7 @@ export default function Hero() {
             GASLESS PAYMASTER FOR FLARE
           </p>
           <Link
-            href="#details"
+            href="/docs"
             className="mt-4 inline-flex items-center justify-center rounded-full border border-white/20 bg-white/8 px-8 py-2.5 text-xs font-semibold tracking-[0.18em] text-white/85 hover:bg-white/14 hover:text-white transition-colors"
           >
             GET STARTED
