@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --purple: #7c3aed;
-  --purple-light: #a855f7;
-  --purple-glow: rgba(124, 58, 237, 0.35);
-  --bg: #080808;
-  --glass: rgba(255, 255, 255, 0.04);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-hover: rgba(124, 58, 237, 0.08);
+  --purple: #4c1d95;
+  --purple-light: #7c3aed;
+  --purple-glow: rgba(76, 29, 149, 0.35);
+  --bg: #05010a;
+  --glass: rgba(17, 24, 39, 0.72);
+  --glass-border: rgba(148, 163, 184, 0.22);
+  --glass-hover: rgba(15, 23, 42, 0.9);
 }
 
 * {
@@ -38,27 +38,50 @@ body {
 
 /* ─── Glass ─────────────────────────────────────────── */
 .glass {
-  background: var(--glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.88),
+    rgba(15, 23, 42, 0.78)
+  );
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
   border: 1px solid var(--glass-border);
 }
 
 .glass-card {
-  background: var(--glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
+  background: linear-gradient(
+    145deg,
+    rgba(15, 23, 42, 0.9),
+    rgba(15, 23, 42, 0.82)
+  );
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(148, 163, 184, 0.22);
   border-radius: 1.25rem;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
   background: var(--glass-hover);
-  border-color: rgba(124, 58, 237, 0.35);
-  box-shadow: 0 0 40px rgba(124, 58, 237, 0.15),
-              0 20px 60px rgba(0, 0, 0, 0.4);
+  border-color: rgba(148, 163, 184, 0.4);
+  box-shadow: 0 0 40px rgba(15, 23, 42, 0.65),
+              0 20px 60px rgba(0, 0, 0, 0.75);
   transform: translateY(-5px);
+}
+
+/* Shell for docs content */
+.docs-shell {
+  background: linear-gradient(
+    145deg,
+    rgba(5, 7, 14, 0.96),
+    rgba(5, 7, 12, 0.9)
+  );
+  border-radius: 1.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  padding: 2.25rem 2.5rem;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.95);
 }
 
 /* ─── Purple Glow ─────────────────────────────────── */

@@ -42,12 +42,9 @@ export default function Navbar() {
 
       {/* Right CTA */}
       <div className="hidden sm:flex items-center gap-3">
-        <button className="rounded-full border border-white/14 bg-white/5 px-4 py-1.5 text-xs text-white/70 hover:bg-white/10 transition-colors">
-          Create Account
-        </button>
         <Link
           href="/docs"
-          className="rounded-full bg-gradient-to-r from-purple-500 to-violet-400 px-5 py-1.5 text-xs font-semibold text-black shadow-[0_0_40px_rgba(167,139,250,0.7)] hover:brightness-110 transition-all"
+          className="rounded-full border border-white/20 bg-white/6 px-5 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-colors"
         >
           Open Docs
         </Link>
