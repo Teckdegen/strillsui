@@ -47,70 +47,62 @@ export default function Hero() {
           <h2 className="mb-3 text-[1.6rem] sm:text-[1.9rem] font-semibold text-purple-200">
             One-click gasless protection for every transaction.
           </h2>
-          <p className="mb-7 text-sm sm:text-[0.92rem] text-purple-200/70 leading-relaxed">
+          <p className="mb-8 text-sm sm:text-[0.92rem] text-purple-200/70 leading-relaxed">
             Your users sign a single intent; Strills routes transfers, swaps, and contract calls
             through a dedicated relayer that pays FLR gas on-chain and settles protocol fees in
             tokens they already hold.
           </p>
 
+          {/* Fee tokens — minimal inline list */}
           <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-40px" }}
-            variants={{
-              hidden: {},
-              show: {
-                transition: { staggerChildren: 0.06 },
-              },
-            }}
-            className="mb-4 grid gap-4 rounded-2xl border border-purple-500/20 bg-[rgba(15,23,42,0.55)] p-4 text-left text-sm text-purple-100 backdrop-blur-xl sm:grid-cols-2"
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-8 flex flex-wrap items-center justify-center gap-2"
           >
-            <motion.ul
-              variants={{ hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0 } }}
-              className="space-y-2"
-            >
-              <li className="text-[11px] font-medium uppercase tracking-[0.18em] text-purple-200">
-                Fee Tokens
-              </li>
-              {["USDT", "FXRP", "WFLR"].map((label) => (
-                <motion.li
-                  key={label}
-                  variants={{ hidden: { opacity: 0, x: -6 }, show: { opacity: 1, x: 0 } }}
-                  className="flex items-center gap-2 text-[12px] text-purple-100/90"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400/80" />
-                  <span className="rounded-full border border-purple-500/30 bg-purple-500/15 px-3 py-1 uppercase tracking-[0.16em]">
-                    {label}
-                  </span>
-                </motion.li>
-              ))}
-            </motion.ul>
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-purple-300/70">
+              Fee tokens
+            </span>
+            <span className="text-purple-500/40">·</span>
+            {["USDT", "FXRP", "WFLR"].map((t) => (
+              <span
+                key={t}
+                className="rounded-full border border-purple-500/25 bg-purple-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-purple-200"
+              >
+                {t}
+              </span>
+            ))}
+          </motion.div>
 
-            <motion.ul
-              variants={{ hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0 } }}
-              className="space-y-2"
-            >
-              <li className="text-[11px] font-medium uppercase tracking-[0.18em] text-purple-200">
-                Flow
-              </li>
-              {[
-                "EIP‑712 intents",
-                "Relayer pays gas",
-                "Transfers & swaps · single signature",
-                "Any contract call · non‑custodial wallet",
-              ].map((label) => (
-                <motion.li
-                  key={label}
-                  variants={{ hidden: { opacity: 0, x: 6 }, show: { opacity: 1, x: 0 } }}
-                  className="flex items-center gap-2 text-[12px] text-purple-100/90"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400/80" />
-                  <span className="rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1">
-                    {label}
+          {/* Flow — 3 steps, minimal words */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="flex flex-wrap items-center justify-center gap-3 sm:gap-6"
+          >
+            {[
+              { label: "Sign", sub: "EIP‑712" },
+              { label: "Relayer", sub: "Pays gas" },
+              { label: "Done", sub: "Fee in token" },
+            ].map((step, i) => (
+              <div key={step.label} className="flex items-center gap-3">
+                <div className="flex flex-col items-center">
+                  <span className="rounded-full border border-purple-500/30 bg-purple-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-purple-200">
+                    {step.label}
                   </span>
-                </motion.li>
-              ))}
-            </motion.ul>
+                  <span className="mt-1 text-[10px] uppercase tracking-widest text-purple-400/60">
+                    {step.sub}
+                  </span>
+                </div>
+                {i < 2 && (
+                  <span className="hidden text-purple-500/40 sm:inline" aria-hidden>
+                    →
+                  </span>
+                )}
+              </div>
+            ))}
           </motion.div>
         </motion.div>
       </div>
