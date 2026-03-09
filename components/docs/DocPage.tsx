@@ -11,11 +11,11 @@ export function Breadcrumb({ items }: { items: { label: string; href?: string }[
         <span key={item.label} className="flex items-center gap-2">
           {i > 0 && <span>/</span>}
           {item.href ? (
-            <Link href={item.href} className="transition-colors hover:text-slate-900">
+            <Link href={item.href} className="transition-colors hover:text-slate-100">
               {item.label}
             </Link>
           ) : (
-            <span className="text-white/60">{item.label}</span>
+            <span className="text-slate-100">{item.label}</span>
           )}
         </span>
       ))}
@@ -31,11 +31,11 @@ export function DocNav({
   next?: { label: string; href: string };
 }) {
   return (
-    <div className="mt-16 flex items-center justify-between border-t border-slate-200 pt-8">
+    <div className="mt-16 flex items-center justify-between border-t border-slate-800 pt-8">
       {prev ? (
         <Link
           href={prev.href}
-          className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+          className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-200 hover:bg-slate-800 hover:text-white transition-colors"
         >
           <div className="text-left">
             <div className="text-xs text-slate-400">Previous</div>
@@ -48,7 +48,7 @@ export function DocNav({
       {next && (
         <Link
           href={next.href}
-          className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+          className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-200 hover:bg-slate-800 hover:text-white transition-colors"
         >
           <div className="text-right">
             <div className="text-xs text-slate-400">Next</div>
@@ -72,10 +72,10 @@ export function CodeBlock({ code, language = "typescript" }: { code: string; lan
   return (
     <div className="code-block my-5 group">
       <div className="code-header">
-        <span className="text-xs font-mono text-slate-500">{language}</span>
+        <span className="text-xs font-mono text-purple-200/80">{language}</span>
         <button
           onClick={copy}
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-900 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-100 transition-colors"
         >
           <span className={copied ? "text-green-400" : ""}>{copied ? "Copied" : "Copy"}</span>
         </button>
