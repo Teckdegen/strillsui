@@ -1,46 +1,34 @@
 "use client";
 
-import { motion, useAnimate, stagger } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-/* ── token nodes ── */
+/* ── constants ── */
+const TEXT1 = "Zero Gas.";
+const TEXT2 = "Full Control.";
+const TOTAL  = TEXT1.length + TEXT2.length;
+const TYPE_SPEED  = 60;   // ms per char while typing
+const ERASE_SPEED = 28;   // ms per char while erasing
+const HOLD_MS     = 2800; // pause at full text before erasing
+
+/* ── 3 token nodes only ── */
 const nodes = [
   {
-    id: "usdt",
-    label: "USDT",
-    sub: "fee token",
-    x: 16, y: 26,
-    delay: 0,
+    id: "usdt",  label: "USDT",   sub: "fee token", x: 14, y: 26, delay: 0,
     img: "https://image2url.com/r2/default/images/1773134129636-2335aa43-ef63-47e9-8fad-12349e820c38.png",
   },
   {
-    id: "fxrp",
-    label: "FXRP",
-    sub: "fee token",
-    x: 78, y: 20,
-    delay: 0.15,
+    id: "fxrp",  label: "FXRP",   sub: "fee token", x: 82, y: 22, delay: 0.2,
     img: "https://image2url.com/r2/default/images/1773134218523-49b58045-951e-4ad2-9ab5-1cc0897fad86.jpg",
   },
   {
-    id: "wflr",
-    label: "WC2FLR",
-    sub: "fee token",
-    x: 12, y: 67,
-    delay: 0.3,
+    id: "wflr",  label: "WC2FLR", sub: "fee token", x: 13, y: 72, delay: 0.4,
     img: "https://image2url.com/r2/default/images/1773134181553-4b674bcc-3bf6-412b-bf4e-dfa755bbeeb6.png",
-  },
-  {
-    id: "flr",
-    label: "FLR",
-    sub: "gas · relayer",
-    x: 80, y: 70,
-    delay: 0.45,
-    img: null, // no icon provided — gradient fallback
   },
 ];
 
-/* ── animated SVG connection line ── */
+/* ── animated SVG line ── */
 function Line({ x1, y1, x2, y2, delay = 0 }: { x1: number; y1: number; x2: number; y2: number; delay?: number }) {
   return (
     <svg className="pointer-events-none absolute inset-0 w-full h-full">
@@ -50,111 +38,105 @@ function Line({ x1, y1, x2, y2, delay = 0 }: { x1: number; y1: number; x2: numbe
       />
       <motion.line
         x1={`${x1}%`} y1={`${y1}%`} x2={`${x2}%`} y2={`${y2}%`}
-        stroke="rgba(167,139,250,0.48)" strokeWidth="1.5"
-        strokeDasharray="14 110" strokeLinecap="round"
+        stroke="rgba(167,139,250,0.46)" strokeWidth="1.5"
+        strokeDasharray="14 120" strokeLinecap="round"
         initial={{ strokeDashoffset: 0 }}
-        animate={{ strokeDashoffset: -130 }}
+        animate={{ strokeDashoffset: -140 }}
         transition={{ duration: 2.8 + delay, repeat: Infinity, ease: "linear", delay }}
       />
     </svg>
   );
 }
 
-/* ── single floating token node ── */
-function TokenNode({ label, sub, x, y, delay, img }: { label: string; sub: string; x: number; y: number; delay: number; img: string | null }) {
+/* ── floating token node ── */
+function TokenNode({ label, sub, x, y, delay, img }: {
+  label: string; sub: string; x: number; y: number; delay: number; img: string;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.6 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.55, delay: 0.5 + delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.55, delay: 0.6 + delay, ease: [0.16, 1, 0.3, 1] }}
       style={{ left: `${x}%`, top: `${y}%` }}
       className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
     >
       <motion.div
         animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 4 + delay * 0.6, repeat: Infinity, ease: "easeInOut", delay }}
+        transition={{ duration: 4 + delay * 0.7, repeat: Infinity, ease: "easeInOut", delay }}
         className="flex flex-col items-center gap-2"
       >
-        {/* icon circle */}
         <div className="relative">
-          <div className="w-11 h-11 rounded-full border border-purple-500/25 overflow-hidden shadow-[0_0_28px_rgba(139,92,246,0.32)] bg-[#0d0719]">
-            {img ? (
-              <img
-                src={img}
-                alt={label}
-                className="w-full h-full object-cover rounded-full"
-              />
-            ) : (
-              <div className="w-full h-full rounded-full flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, #4c1d95, #7c3aed)" }}>
-                <span className="text-[9px] font-bold text-white tracking-tight">FLR</span>
-              </div>
-            )}
+          <div className="w-11 h-11 rounded-full border border-purple-500/25 overflow-hidden shadow-[0_0_28px_rgba(139,92,246,0.3)] bg-[#0d0719]">
+            <img src={img} alt={label} className="w-full h-full object-cover rounded-full" />
           </div>
-          {/* pulse ring */}
           <motion.div
-            animate={{ scale: [1, 1.9], opacity: [0.38, 0] }}
+            animate={{ scale: [1, 1.9], opacity: [0.35, 0] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut", delay }}
-            className="absolute inset-0 rounded-full border border-purple-400/22"
+            className="absolute inset-0 rounded-full border border-purple-400/20"
           />
         </div>
-
-        {/* label */}
         <div className="text-center">
-          <div className="text-[11px] font-semibold text-white/80 tracking-wide leading-none">{label}</div>
-          <div className="text-[8px] text-purple-400/50 tracking-[0.15em] uppercase mt-0.5">{sub}</div>
+          <div className="text-[11px] font-semibold text-white/78 tracking-wide leading-none">{label}</div>
+          <div className="text-[8px] text-purple-400/48 tracking-[0.15em] uppercase mt-0.5">{sub}</div>
         </div>
       </motion.div>
     </motion.div>
   );
 }
 
-/* ── typewriter component ── */
-function TypeWriter({ text, className }: { text: string; className?: string }) {
-  return (
-    <motion.span
-      className={className}
-      initial="hidden"
-      animate="visible"
-      variants={{
-        visible: { transition: { staggerChildren: 0.045 } },
-        hidden: {},
-      }}
-    >
-      {text.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          variants={{
-            hidden: { opacity: 0, y: 8 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.18, ease: "easeOut" } },
-          }}
-          style={{ display: char === " " ? "inline" : "inline-block" }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </motion.span>
-      ))}
-    </motion.span>
-  );
-}
-
 /* ── blinking cursor ── */
-function Cursor({ delay }: { delay: number }) {
+function Cursor() {
   return (
     <motion.span
-      initial={{ opacity: 0 }}
-      animate={{ opacity: [0, 0, 1, 1, 1, 0] }}
-      transition={{ duration: 0.9, delay, repeat: 4, ease: "linear" }}
-      className="inline-block w-[3px] h-[0.85em] bg-purple-400 rounded-full align-middle ml-1 translate-y-[-0.05em]"
+      animate={{ opacity: [1, 1, 0, 0] }}
+      transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
+      className="inline-block w-[3px] h-[0.82em] bg-purple-400 rounded-sm align-middle ml-1.5 translate-y-[-0.06em]"
     />
   );
 }
 
+/* ── main component ── */
 export default function Hero() {
-  const [hovered, setHovered] = useState(false);
+  const [count, setCount]       = useState(0);
+  const [phase, setPhase]       = useState<"typing" | "holding" | "erasing" | "resetting">("typing");
+  const [hovered, setHovered]   = useState(false);
 
-  // line 1 ≈ 9 chars × 0.045s = 0.4s + 0.35 initial = 0.75s
-  // line 2 ≈ 12 chars × 0.045s = 0.54s, starts after line 1 + gap
-  const line2Delay = 0.35 + 9 * 0.045 + 0.15;
+  /* state machine */
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (phase === "typing") {
+      if (count < TOTAL) {
+        timer = setTimeout(() => setCount((c) => c + 1), TYPE_SPEED);
+      } else {
+        setPhase("holding");
+      }
+    }
+
+    if (phase === "holding") {
+      timer = setTimeout(() => setPhase("erasing"), HOLD_MS);
+    }
+
+    if (phase === "erasing") {
+      if (count > 0) {
+        timer = setTimeout(() => setCount((c) => c - 1), ERASE_SPEED);
+      } else {
+        setPhase("resetting");
+      }
+    }
+
+    if (phase === "resetting") {
+      timer = setTimeout(() => setPhase("typing"), 320);
+    }
+
+    return () => clearTimeout(timer);
+  }, [count, phase]);
+
+  /* derive display strings */
+  const chars1 = Math.min(count, TEXT1.length);
+  const chars2 = Math.max(0, count - TEXT1.length);
+  const showCursor = phase === "typing" || phase === "erasing";
+  const cursorOnLine2 = count > TEXT1.length;
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-[#06030f]">
@@ -162,18 +144,17 @@ export default function Hero() {
       {/* bg glows */}
       <div className="pointer-events-none absolute inset-0">
         <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.72, 0.4] }}
+          animate={{ scale: [1, 1.1, 1], opacity: [0.38, 0.7, 0.38] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           className="absolute left-1/2 top-1/2 h-[680px] w-[680px] -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{ background: "radial-gradient(circle, rgba(109,40,217,0.24) 0%, transparent 60%)" }}
         />
         <div className="absolute -left-40 top-1/3 h-80 w-80 rounded-full bg-purple-900/14 blur-3xl" />
         <div className="absolute -right-40 bottom-1/3 h-80 w-80 rounded-full bg-violet-900/10 blur-3xl" />
-        {/* star field */}
         {[...Array(32)].map((_, i) => (
           <motion.div
             key={i}
-            animate={{ opacity: [0.1, 0.55, 0.1] }}
+            animate={{ opacity: [0.1, 0.5, 0.1] }}
             transition={{ duration: 2.5 + (i % 5), repeat: Infinity, delay: (i * 0.27) % 3.8 }}
             className="absolute rounded-full bg-white/70"
             style={{
@@ -186,12 +167,11 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* connection lines */}
+      {/* lines — only 3 now */}
       <div className="pointer-events-none absolute inset-0">
-        <Line x1={16} y1={26} x2={50} y2={50} delay={0} />
-        <Line x1={78} y1={20} x2={50} y2={50} delay={0.6} />
-        <Line x1={12} y1={67} x2={50} y2={50} delay={1.1} />
-        <Line x1={80} y1={70} x2={50} y2={50} delay={1.6} />
+        <Line x1={14} y1={26} x2={50} y2={50} delay={0} />
+        <Line x1={82} y1={22} x2={50} y2={50} delay={0.6} />
+        <Line x1={13} y1={72} x2={50} y2={50} delay={1.2} />
       </div>
 
       {/* floating nodes */}
@@ -200,7 +180,7 @@ export default function Hero() {
       {/* center content */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center text-center px-6">
 
-        {/* pill badge */}
+        {/* badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -215,65 +195,58 @@ export default function Hero() {
           Live on Flare Coston2
         </motion.div>
 
-        {/* headline — typewriter effect */}
-        <h1
-          className="text-[3rem] sm:text-[4.8rem] md:text-[6rem] font-black leading-[1.0] tracking-[-0.035em] text-white"
-          style={{ fontFamily: "'SF Pro Display', 'Inter', system-ui, sans-serif" }}
+        {/* looping typewriter headline */}
+        <motion.h1
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-[3rem] sm:text-[4.8rem] md:text-[6rem] font-black leading-[1.08] tracking-[-0.035em]"
+          style={{ fontFamily: "'SF Pro Display', 'Inter', system-ui, sans-serif", minHeight: "2.2em" }}
         >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <TypeWriter text="Zero Gas." className="text-white" />
-            <Cursor delay={0.3 + 9 * 0.045} />
-          </motion.div>
+          {/* line 1 — white */}
+          <div className="block text-white">
+            {TEXT1.slice(0, chars1)}
+            {showCursor && !cursorOnLine2 && <Cursor />}
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: line2Delay }}
+          {/* line 2 — purple gradient, only rendered once we reach it */}
+          <div
+            className="block"
+            style={{
+              background: "linear-gradient(135deg, #c084fc 0%, #7c3aed 45%, #a78bfa 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: chars2 > 0 ? "transparent" : "initial",
+              backgroundClip: "text",
+              minHeight: "1em",
+            }}
           >
-            <TypeWriter
-              text="Full Control."
-              className=""
-            />
-            <Cursor delay={line2Delay + 13 * 0.045} />
-          </motion.div>
-        </h1>
-
-        {/* gradient overlay on "Full Control." */}
-        <style jsx global>{`
-          .hero-gradient-line {
-            background: linear-gradient(135deg, #c084fc 0%, #7c3aed 45%, #a78bfa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-          }
-        `}</style>
+            {TEXT2.slice(0, chars2)}
+            {showCursor && cursorOnLine2 && <Cursor />}
+          </div>
+        </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: line2Delay + 13 * 0.045 + 0.5 }}
-          className="mt-6 max-w-xs text-sm text-white/36 leading-[1.9]"
+          transition={{ duration: 0.6, delay: 1.6 }}
+          className="mt-6 max-w-xs text-sm text-white/35 leading-[1.9]"
         >
           Send, swap, call — without FLR.
           <br />Pay in USDT, FXRP, or WC2FLR.
         </motion.p>
 
-        {/* CTAs */}
+        {/* single CTA */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: line2Delay + 13 * 0.045 + 0.75 }}
-          className="mt-10 flex items-center gap-3"
+          transition={{ duration: 0.6, delay: 1.8 }}
+          className="mt-10"
         >
           <Link
             href="/docs"
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-purple-600 px-7 py-3 text-sm font-semibold text-white shadow-[0_0_32px_rgba(124,58,237,0.42)] transition-all duration-300 hover:shadow-[0_0_52px_rgba(124,58,237,0.7)] hover:scale-[1.03]"
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-purple-600 px-8 py-3.5 text-sm font-semibold text-white shadow-[0_0_32px_rgba(124,58,237,0.42)] transition-all duration-300 hover:shadow-[0_0_55px_rgba(124,58,237,0.7)] hover:scale-[1.03]"
           >
             <span className="relative z-10">Open Docs</span>
             <motion.span
@@ -285,29 +258,20 @@ export default function Hero() {
             </motion.span>
             <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Link>
-
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-7 py-3 text-sm font-semibold text-white/55 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:text-white hover:bg-white/[0.07]"
-          >
-            View Code
-          </a>
         </motion.div>
 
         {/* flow hint */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: line2Delay + 13 * 0.045 + 1.2 }}
-          className="mt-16 flex items-center gap-3 text-[9px] uppercase tracking-[0.24em] text-white/20"
+          transition={{ delay: 2.2 }}
+          className="mt-16 flex items-center gap-3 text-[9px] uppercase tracking-[0.24em] text-white/18"
         >
           {["Sign EIP-712", "→", "Relayer sends", "→", "Fee deducted"].map((s, i) => (
             <motion.span
               key={i}
-              animate={s !== "→" ? { opacity: [0.2, 0.6, 0.2] } : {}}
-              transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.4 }}
+              animate={s !== "→" ? { opacity: [0.18, 0.55, 0.18] } : {}}
+              transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.4 }}
             >
               {s}
             </motion.span>
@@ -320,12 +284,12 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2 }}
-        className="absolute bottom-8 left-8 flex items-center gap-2.5 text-[9px] uppercase tracking-[0.22em] text-white/20"
+        className="absolute bottom-8 left-8 flex items-center gap-2.5 text-[9px] uppercase tracking-[0.22em] text-white/18"
       >
         <motion.div
           animate={{ y: [0, 5, 0] }}
           transition={{ duration: 1.6, repeat: Infinity }}
-          className="w-5 h-5 rounded-full border border-white/14 flex items-center justify-center"
+          className="w-5 h-5 rounded-full border border-white/12 flex items-center justify-center"
         >
           <span className="text-[8px]">↓</span>
         </motion.div>
@@ -338,8 +302,8 @@ export default function Hero() {
         transition={{ delay: 2.2 }}
         className="absolute bottom-8 right-8 text-right"
       >
-        <div className="text-[9px] uppercase tracking-[0.28em] text-white/16">Gasless Layer</div>
-        <div className="mt-1.5 w-8 h-px bg-white/10 ml-auto" />
+        <div className="text-[9px] uppercase tracking-[0.28em] text-white/14">Gasless Layer</div>
+        <div className="mt-1.5 w-8 h-px bg-white/8 ml-auto" />
       </motion.div>
     </section>
   );
