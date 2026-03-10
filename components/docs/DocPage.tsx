@@ -4,18 +4,19 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 
+/* ── Breadcrumb ─────────────────────────────────────── */
 export function Breadcrumb({ items }: { items: { label: string; href?: string }[] }) {
   return (
-    <nav className="mb-6 flex items-center gap-2 text-xs text-slate-400">
+    <nav className="mb-8 flex items-center gap-1.5 text-xs text-white/25">
       {items.map((item, i) => (
-        <span key={item.label} className="flex items-center gap-2">
-          {i > 0 && <span>/</span>}
+        <span key={item.label} className="flex items-center gap-1.5">
+          {i > 0 && <span className="text-white/15">/</span>}
           {item.href ? (
-            <Link href={item.href} className="transition-colors hover:text-slate-100">
+            <Link href={item.href} className="hover:text-white/60 transition-colors duration-150">
               {item.label}
             </Link>
           ) : (
-            <span className="text-slate-100">{item.label}</span>
+            <span className="text-white/50">{item.label}</span>
           )}
         </span>
       ))}
@@ -23,6 +24,7 @@ export function Breadcrumb({ items }: { items: { label: string; href?: string }[
   );
 }
 
+/* ── Prev / Next nav ────────────────────────────────── */
 export function DocNav({
   prev,
   next,
@@ -31,38 +33,34 @@ export function DocNav({
   next?: { label: string; href: string };
 }) {
   return (
-    <div className="mt-16 flex items-center justify-between border-t border-slate-800 pt-8">
+    <div className="mt-16 grid grid-cols-2 gap-3 border-t border-white/[0.06] pt-8">
       {prev ? (
         <Link
           href={prev.href}
-          className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-200 hover:bg-slate-800 hover:text-white transition-colors"
+          className="group flex flex-col gap-0.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 transition-all duration-200 hover:border-purple-500/25 hover:bg-purple-500/5"
         >
-          <div className="text-left">
-            <div className="text-xs text-slate-400">Previous</div>
-            <div>{prev.label}</div>
-          </div>
+          <span className="text-[10px] uppercase tracking-[0.18em] text-white/25 group-hover:text-purple-400/60 transition-colors">← Previous</span>
+          <span className="text-sm font-medium text-white/70 group-hover:text-white transition-colors">{prev.label}</span>
         </Link>
       ) : (
         <div />
       )}
-      {next && (
+      {next ? (
         <Link
           href={next.href}
-          className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-200 hover:bg-slate-800 hover:text-white transition-colors"
+          className="group flex flex-col gap-0.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 text-right transition-all duration-200 hover:border-purple-500/25 hover:bg-purple-500/5 col-start-2"
         >
-          <div className="text-right">
-            <div className="text-xs text-slate-400">Next</div>
-            <div>{next.label}</div>
-          </div>
+          <span className="text-[10px] uppercase tracking-[0.18em] text-white/25 group-hover:text-purple-400/60 transition-colors">Next →</span>
+          <span className="text-sm font-medium text-white/70 group-hover:text-white transition-colors">{next.label}</span>
         </Link>
-      )}
+      ) : null}
     </div>
   );
 }
 
+/* ── Code block ─────────────────────────────────────── */
 export function CodeBlock({ code, language = "typescript" }: { code: string; language?: string }) {
   const [copied, setCopied] = useState(false);
-
   const copy = () => {
     navigator.clipboard.writeText(code);
     setCopied(true);
@@ -70,23 +68,26 @@ export function CodeBlock({ code, language = "typescript" }: { code: string; lan
   };
 
   return (
-    <div className="code-block my-5 group">
-      <div className="code-header">
-        <span className="text-xs font-mono text-purple-200/80">{language}</span>
+    <div className="my-5 overflow-hidden rounded-xl border border-white/[0.07] bg-[#0b0714]">
+      {/* header bar */}
+      <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-2.5">
+        <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/25">{language}</span>
         <button
           onClick={copy}
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-100 transition-colors"
+          className="text-[10px] uppercase tracking-[0.15em] text-white/25 hover:text-purple-300 transition-colors duration-150"
         >
-          <span className={copied ? "text-green-400" : ""}>{copied ? "Copied" : "Copy"}</span>
+          {copied ? "✓ Copied" : "Copy"}
         </button>
       </div>
-      <pre className="p-5 overflow-x-auto text-sm text-purple-300 font-mono leading-relaxed">
+      {/* code */}
+      <pre className="overflow-x-auto p-5 text-[13px] leading-relaxed text-purple-200/80 font-mono">
         <code>{code}</code>
       </pre>
     </div>
   );
 }
 
+/* ── Callout ────────────────────────────────────────── */
 export function Callout({
   type = "info",
   children,
@@ -94,28 +95,31 @@ export function Callout({
   type?: "info" | "warning" | "tip";
   children: React.ReactNode;
 }) {
-  const styles = {
-    info: "bg-blue-500/8 border-blue-500/20 text-blue-300",
-    warning: "bg-yellow-500/8 border-yellow-500/20 text-yellow-300",
-    tip: "bg-purple-500/8 border-purple-500/20 text-purple-300",
+  const map = {
+    info:    { border: "border-l-blue-500/60",   bg: "bg-blue-500/5",   text: "text-blue-300/80",   label: "Note" },
+    warning: { border: "border-l-amber-500/60",  bg: "bg-amber-500/5",  text: "text-amber-300/80",  label: "Warning" },
+    tip:     { border: "border-l-purple-500/60", bg: "bg-purple-500/5", text: "text-purple-300/80", label: "Tip" },
   };
-  const icons = { info: "ℹ️", warning: "⚠️", tip: "💡" };
+  const { border, bg, text, label } = map[type];
 
   return (
-    <div className={`flex gap-3 p-4 rounded-xl border my-5 ${styles[type]}`}>
-      <span>{icons[type]}</span>
-      <div className="text-sm leading-relaxed">{children}</div>
+    <div className={`my-5 flex gap-4 border-l-2 ${border} ${bg} rounded-r-xl px-5 py-4`}>
+      <div className="flex-1">
+        <div className={`text-[10px] uppercase tracking-[0.18em] font-semibold ${text} mb-1.5`}>{label}</div>
+        <div className="text-sm text-white/55 leading-relaxed">{children}</div>
+      </div>
     </div>
   );
 }
 
+/* ── Page wrapper ───────────────────────────────────── */
 export function PageWrapper({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45 }}
-      className="doc-content"
+      transition={{ duration: 0.35 }}
+      className="gitbook-content"
     >
       {children}
     </motion.div>

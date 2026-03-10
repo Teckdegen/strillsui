@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 const nav = [
   {
@@ -30,7 +31,7 @@ const nav = [
       { label: "Send All", href: "/docs/transactions/send-all" },
       { label: "DEX Swap", href: "/docs/transactions/swap" },
       { label: "Contract Call", href: "/docs/transactions/call" },
-      { label: "Approval Gas", href: "/docs/transactions/approval-gas" },
+      { label: "Approval & Gas", href: "/docs/transactions/approval-gas" },
     ],
   },
   {
@@ -52,19 +53,20 @@ const nav = [
 
 function NavSection({ section }: { section: (typeof nav)[0] }) {
   const pathname = usePathname();
-  const isActive = section.items.some((i) => i.href === pathname);
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState(true);
 
   return (
-    <div className="mb-1">
+    <div className="mb-5">
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-slate-50 transition-colors"
+        className="flex w-full items-center justify-between py-1 text-left"
       >
-        <span className="uppercase tracking-[0.18em]">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/25">
           {section.title}
         </span>
-        <span className="text-[10px] text-slate-500">{open ? "−" : "+"}</span>
+        <ChevronDown
+          className={`w-3 h-3 text-white/15 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       <AnimatePresence initial={false}>
@@ -73,29 +75,29 @@ function NavSection({ section }: { section: (typeof nav)[0] }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="mt-0.5 space-y-0.5 pl-2">
+            <div className="mt-1 flex flex-col">
               {section.items.map((item) => {
                 const active = pathname === item.href;
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`relative flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[13px] transition-all duration-150 ${
+                    className={`relative flex items-center py-1.5 pl-3 pr-2 text-sm transition-colors duration-150 rounded-md ${
                       active
-                        ? "bg-slate-900 text-white"
-                        : "text-slate-400 hover:bg-slate-800 hover:text-slate-50"
+                        ? "text-white font-medium"
+                        : "text-white/38 hover:text-white/70"
                     }`}
                   >
                     {active && (
                       <motion.div
-                        layoutId="sidebar-indicator"
-                        className="absolute left-0 top-1/2 h-3 w-0.5 -translate-y-1/2 rounded-full bg-purple-500"
+                        layoutId="sidebar-active"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-purple-500"
                       />
                     )}
-                    <span className="pl-1">{item.label}</span>
+                    {item.label}
                   </Link>
                 );
               })}
@@ -109,21 +111,32 @@ function NavSection({ section }: { section: (typeof nav)[0] }) {
 
 export default function Sidebar() {
   return (
-    <aside className="hidden w-64 shrink-0 text-sm text-slate-200 lg:block">
-      <div className="sticky top-0 flex h-screen flex-col gap-4 border-r border-slate-800/60 bg-transparent pt-6">
-        {/* Logo */}
-        <Link href="/" className="mb-4 flex items-center gap-2 px-4">
-          <span className="text-sm font-semibold text-slate-100">
-            Strills <span className="text-slate-500">Docs</span>
-          </span>
+    <aside className="w-52 shrink-0 hidden lg:block">
+      <div className="sticky top-0 h-screen overflow-y-auto py-8 flex flex-col">
+        <Link href="/" className="flex items-center gap-2.5 mb-10 px-1">
+          <div
+            className="w-6 h-6 rounded-full border border-white/15 bg-center bg-cover"
+            style={{ backgroundImage: "url('https://image2url.com/r2/default/images/1773047373605-4fb22ebb-f299-4f61-b949-c5b42c484cef.jpg')" }}
+          />
+          <span className="text-sm font-semibold text-white/65 tracking-tight">Strills Pay</span>
         </Link>
 
-        {/* Nav */}
-        <nav className="flex-1 space-y-1 px-3 pb-6">
+        <nav className="flex-1 space-y-0 px-1">
           {nav.map((section) => (
             <NavSection key={section.title} section={section} />
           ))}
         </nav>
+
+        <div className="mt-6 px-1 pt-5 border-t border-white/[0.05] flex flex-col gap-2">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+            className="text-xs text-white/20 hover:text-white/45 transition-colors">
+            GitHub
+          </a>
+          <a href="https://coston2-explorer.flare.network" target="_blank" rel="noopener noreferrer"
+            className="text-xs text-white/20 hover:text-white/45 transition-colors">
+            Block Explorer
+          </a>
+        </div>
       </div>
     </aside>
   );

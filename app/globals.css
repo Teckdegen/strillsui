@@ -6,101 +6,53 @@
   --purple: #4c1d95;
   --purple-light: #7c3aed;
   --purple-glow: rgba(76, 29, 149, 0.35);
-  --bg: #05010a;
+  --bg: #06030f;
   --glass: rgba(17, 24, 39, 0.72);
   --glass-border: rgba(148, 163, 184, 0.22);
-  --glass-hover: rgba(15, 23, 42, 0.9);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background: #080808;
+  background: #06030f;
   color: #f1f1f1;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ─── Scrollbar ─────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
+/* ─── Scrollbar ─────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #06030f; }
 ::-webkit-scrollbar-thumb { background: #3b1d6e; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
 
-/* ─── Glass ─────────────────────────────────────────── */
+/* ─── Glass ─────────────────────────────── */
 .glass {
-  background: linear-gradient(
-    135deg,
-    rgba(15, 23, 42, 0.88),
-    rgba(15, 23, 42, 0.78)
-  );
-  backdrop-filter: blur(26px);
-  -webkit-backdrop-filter: blur(26px);
+  background: linear-gradient(135deg, rgba(15,23,42,0.85), rgba(15,23,42,0.75));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
 }
 
 .glass-card {
-  background: linear-gradient(
-    145deg,
-    rgba(15, 23, 42, 0.9),
-    rgba(15, 23, 42, 0.82)
-  );
+  background: linear-gradient(145deg, rgba(15,23,42,0.88), rgba(15,23,42,0.80));
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(148, 163, 184, 0.22);
+  border: 1px solid rgba(148,163,184,0.20);
   border-radius: 1.25rem;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  background: var(--glass-hover);
-  border-color: rgba(148, 163, 184, 0.4);
-  box-shadow: 0 0 40px rgba(15, 23, 42, 0.65),
-              0 20px 60px rgba(0, 0, 0, 0.75);
-  transform: translateY(-5px);
+  border-color: rgba(139,92,246,0.25);
+  box-shadow: 0 0 40px rgba(109,40,217,0.12), 0 20px 60px rgba(0,0,0,0.75);
+  transform: translateY(-4px);
 }
 
-/* Shell for docs content */
-.docs-shell {
-  background: linear-gradient(
-    145deg,
-    rgba(5, 7, 14, 0.96),
-    rgba(5, 7, 12, 0.9)
-  );
-  border-radius: 1.75rem;
-  border: 1px solid rgba(148, 163, 184, 0.24);
-  padding: 2.25rem 2.5rem;
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.95);
-}
-
-/* ─── Purple Glow ─────────────────────────────────── */
-.glow-purple {
-  box-shadow: 0 0 60px rgba(124, 58, 237, 0.4),
-              0 0 120px rgba(124, 58, 237, 0.15);
-}
-
-.glow-text {
-  text-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
-}
-
-.glow-border {
-  border-color: rgba(124, 58, 237, 0.5);
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.2),
-              inset 0 0 20px rgba(124, 58, 237, 0.05);
-}
-
-/* ─── Gradient Text ─────────────────────────────────── */
+/* ─── Gradient text ─────────────────────── */
 .gradient-text {
   background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #c084fc 100%);
   -webkit-background-clip: text;
@@ -108,148 +60,34 @@ body {
   background-clip: text;
 }
 
-.gradient-text-white {
-  background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ─── Gradient Button ───────────────────────────────── */
-.btn-purple {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-purple::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #a855f7, #7c3aed);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.btn-purple:hover::after { opacity: 1; }
-.btn-purple:hover { box-shadow: 0 0 30px rgba(124, 58, 237, 0.5), 0 8px 25px rgba(0,0,0,0.3); transform: translateY(-2px); }
-.btn-purple span { position: relative; z-index: 1; }
-
-/* ─── Background Orb ─────────────────────────────────── */
+/* ─── Orb ────────────────────────────────── */
 .orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
   pointer-events: none;
-  animation: pulseGlow 4s ease-in-out infinite;
 }
 
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.25; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.05); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-18px); }
-}
-
-@keyframes floatRev {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(18px); }
-}
-
-/* ─── Docs (dark, full-page) ─────────────────────────── */
-.doc-content h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #f9fafb;
-}
-.doc-content h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-top: 2.5rem;
-  margin-bottom: 0.75rem;
-  color: #e5e7eb;
-}
-.doc-content h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
-  color: #e5e7eb;
-}
-.doc-content p {
-  line-height: 1.8;
-  color: #cbd5f5;
-  margin-bottom: 1rem;
-}
-.doc-content ul {
-  padding-left: 1.4rem;
-  margin-bottom: 1rem;
-}
-.doc-content li {
-  color: #cbd5f5;
-  line-height: 1.8;
-  margin-bottom: 0.25rem;
-  list-style-type: disc;
-}
-.doc-content code {
-  background: rgba(15,23,42,0.9);
-  color: #e5e7eb;
-  padding: 0.15rem 0.4rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-}
-.doc-content pre {
-  background: #020617;
-  border: 1px solid rgba(15,23,42,0.9);
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  overflow-x: auto;
-  margin: 1.25rem 0;
-}
-.doc-content pre code {
-  background: none;
-  color: #e5e7eb;
-  padding: 0;
-  font-size: 0.875rem;
-}
-.doc-content a {
-  color: #c4b5fd;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.doc-content strong {
-  color: #f9fafb;
-}
-.doc-content hr {
-  border-color: rgba(148,163,184,0.4);
-  margin: 2rem 0;
-}
-
-/* ─── Token badge ─────────────────────────────────────── */
+/* ─── Token badge ───────────────────────── */
 .token-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.25rem 0.625rem;
-  background: rgba(124, 58, 237, 0.15);
-  border: 1px solid rgba(124, 58, 237, 0.3);
+  padding: 0.2rem 0.7rem;
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.25);
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: #c4b5fd;
 }
 
-/* ─── Code highlight ──────────────────────────────────── */
+/* ─── Code block ─────────────────────────── */
 .code-block {
-  background: rgba(10, 5, 20, 0.8);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: #0b0714;
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 0.75rem;
   overflow: hidden;
 }
@@ -258,7 +96,108 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.625rem 1rem;
-  background: rgba(124, 58, 237, 0.08);
-  border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+  padding: 0.55rem 1rem;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ─── GitBook-style doc content ─────────── */
+.gitbook-content {
+  line-height: 1.75;
+  color: rgba(241,241,241,0.65);
+}
+
+.gitbook-content h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #f9fafb;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.gitbook-content h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f0f0f0;
+  letter-spacing: -0.015em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.gitbook-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.gitbook-content p {
+  margin-bottom: 1rem;
+  color: rgba(241,241,241,0.55);
+}
+
+.gitbook-content ul {
+  padding-left: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.gitbook-content li {
+  color: rgba(241,241,241,0.55);
+  margin-bottom: 0.3rem;
+  list-style-type: disc;
+}
+
+.gitbook-content strong {
+  color: #f9fafb;
+  font-weight: 600;
+}
+
+.gitbook-content em {
+  color: rgba(241,241,241,0.70);
+}
+
+.gitbook-content code {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.82em;
+}
+
+.gitbook-content a {
+  color: #a78bfa;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(167,139,250,0.35);
+  transition: color 0.15s;
+}
+
+.gitbook-content a:hover {
+  color: #c4b5fd;
+  text-decoration-color: rgba(196,181,253,0.5);
+}
+
+.gitbook-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+}
+
+.gitbook-content th {
+  text-align: left;
+  padding: 0.6rem 1rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.3);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.gitbook-content td {
+  padding: 0.65rem 1rem;
+  color: rgba(241,241,241,0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
 }

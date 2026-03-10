@@ -1,104 +1,67 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PenLine, Radio, CheckCircle2 } from "lucide-react";
 
 const steps = [
-  {
-    number: "01",
-    icon: PenLine,
-    title: "You Sign Off-Chain",
-    description:
-      "You sign a typed intent in your wallet — no on-chain tx, no gas needed. It takes under a second.",
-    detail: "EIP-712 signature",
-  },
-  {
-    number: "02",
-    icon: Radio,
-    title: "Relayer Submits",
-    description:
-      "Our relayer picks up your signed intent, pays the FLR gas, and submits the transaction to Flare on your behalf.",
-    detail: "Relayer pays gas",
-  },
-  {
-    number: "03",
-    icon: CheckCircle2,
-    title: "Done — Fee Auto-Deducted",
-    description:
-      "The contract executes your intent, pulls the protocol fee from your wallet in USDT, FXRP, or WFLR, and emits an on-chain event.",
-    detail: "Fee in your token",
-  },
+  { n: "01", title: "Sign Off-Chain",        sub: "EIP-712 typed data", desc: "You sign an intent in your wallet. No on-chain tx, no gas. Takes under a second." },
+  { n: "02", title: "Relayer Submits",        sub: "Relayer pays FLR",   desc: "The relayer picks up your intent, pays the gas, and submits the transaction on-chain." },
+  { n: "03", title: "Fee Auto-Deducted",      sub: "Token of choice",    desc: "The contract verifies your signature, pulls the fee in USDT, FXRP, or WC2FLR, and executes." },
 ];
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative py-32 px-6 overflow-hidden">
-      {/* Section orb */}
-      <div className="orb w-[500px] h-[500px] bg-purple-800 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10" />
+    <section id="how-it-works" className="relative py-32 px-6 overflow-hidden bg-[#06030f]">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[700px] rounded-full bg-purple-900/10 blur-3xl" />
+      </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Header */}
+      <div className="max-w-5xl mx-auto relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="mb-20 text-center"
         >
-          <span className="token-badge mb-4 inline-block">How It Works</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-purple-400/60 mb-4">How it works</p>
+          <h2 className="text-4xl sm:text-5xl font-black text-white tracking-[-0.02em]">
             Three steps.{" "}
-            <span className="gradient-text">Zero gas.</span>
+            <span style={{
+              background: "linear-gradient(135deg, #c084fc, #7c3aed)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}>
+              Zero gas.
+            </span>
           </h2>
-          <p className="text-white/40 text-lg max-w-xl mx-auto">
-            From sign to settled — the whole flow happens in seconds.
-          </p>
         </motion.div>
 
-        {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-          {/* Connector lines */}
-          <div className="hidden md:block absolute top-[4.5rem] left-[33%] w-[34%] h-px bg-gradient-to-r from-purple-600/40 via-purple-400/60 to-purple-600/40" />
-          <div className="hidden md:block absolute top-[4.5rem] left-[66%] w-[34%] h-px bg-gradient-to-r from-purple-600/40 via-purple-400/60 to-purple-600/40" />
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.04] rounded-2xl overflow-hidden border border-white/[0.06]">
+          {steps.map(({ n, title, sub, desc }, i) => (
+            <motion.div
+              key={n}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: i * 0.12 }}
+              whileHover={{ backgroundColor: "rgba(109,40,217,0.06)" }}
+              className="group relative flex flex-col gap-5 bg-[#06030f] p-8 cursor-default transition-colors duration-300"
+            >
+              {/* number */}
+              <span className="text-[4rem] font-black text-white/[0.04] leading-none select-none group-hover:text-purple-600/15 transition-colors duration-500">
+                {n}
+              </span>
 
-          {steps.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <motion.div
-                key={step.number}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                whileHover={{ y: -6 }}
-                className="glass-card p-8 flex flex-col gap-5 group cursor-default"
-              >
-                {/* Number + Icon */}
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-purple-600/20 border border-purple-600/30 flex items-center justify-center group-hover:bg-purple-600/30 group-hover:border-purple-500/50 transition-all duration-300">
-                    <Icon className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <span className="text-4xl font-black text-white/10 group-hover:text-purple-600/30 transition-colors duration-300">
-                    {step.number}
-                  </span>
-                </div>
+              {/* active line */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/0 to-transparent group-hover:via-purple-500/50 transition-all duration-500" />
 
-                {/* Text */}
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
-                  <p className="text-sm text-white/50 leading-relaxed">{step.description}</p>
-                </div>
-
-                {/* Detail badge */}
-                <div className="mt-auto">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-full px-3 py-1">
-                    <div className="w-1 h-1 rounded-full bg-purple-400" />
-                    {step.detail}
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
+              <div>
+                <div className="text-base font-bold text-white mb-1">{title}</div>
+                <div className="text-[10px] uppercase tracking-[0.18em] text-purple-400/55 mb-3">{sub}</div>
+                <p className="text-sm text-white/40 leading-relaxed">{desc}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
