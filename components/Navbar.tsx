@@ -12,7 +12,7 @@ export default function Navbar() {
           className="w-9 h-9 rounded-full border border-white/15 bg-center bg-cover shadow-[0_0_40px_rgba(124,58,237,0.45)]"
           style={{
             backgroundImage:
-              "url('https://image2url.com/r2/default/images/1773047373605-4fb22ebb-f299-4f61-b949-c5b42c484cef.jpg')",
+              "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')",
           }}
         />
         <div className="flex flex-col leading-tight">

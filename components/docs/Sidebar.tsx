@@ -116,7 +116,7 @@ export default function Sidebar() {
         <Link href="/" className="flex items-center gap-2.5 mb-10 px-1">
           <div
             className="w-6 h-6 rounded-full border border-white/15 bg-center bg-cover"
-            style={{ backgroundImage: "url('https://image2url.com/r2/default/images/1773047373605-4fb22ebb-f299-4f61-b949-c5b42c484cef.jpg')" }}
+            style={{ backgroundImage: "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')" }}
           />
           <span className="text-sm font-semibold text-white/65 tracking-tight">Strills Pay</span>
         </Link>
