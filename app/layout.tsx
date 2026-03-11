@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const ICON = "https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png";
+const ICON = "https://image2url.com/r2/default/images/1773236115705-9cba8e64-53c7-43c1-ae3c-0fed01c105ff.png";
 
 export const metadata: Metadata = {
   title: "Zedkr — Gasless Transactions on Flare",

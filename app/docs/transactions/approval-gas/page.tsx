@@ -131,7 +131,7 @@ export default function TxApprovalGas() {
 
       <DocNav
         prev={{ label: "Contract Call", href: "/docs/transactions/call" }}
-        next={{ label: "GaslessRouter", href: "/docs/contracts" }}
+        next={{ label: "How Signatures Work", href: "/docs/security" }}
       />
     </PageWrapper>
   );

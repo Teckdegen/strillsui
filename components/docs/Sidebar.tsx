@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
 
+const ICON = "https://image2url.com/r2/default/images/1773236115705-9cba8e64-53c7-43c1-ae3c-0fed01c105ff.png";
+
 const nav = [
   {
     title: "Overview",
@@ -32,13 +34,6 @@ const nav = [
       { label: "DEX Swap", href: "/docs/transactions/swap" },
       { label: "Contract Call", href: "/docs/transactions/call" },
       { label: "Approval & Gas", href: "/docs/transactions/approval-gas" },
-    ],
-  },
-  {
-    title: "Contracts",
-    items: [
-      { label: "GaslessRouter", href: "/docs/contracts" },
-      { label: "Addresses", href: "/docs/contracts/addresses" },
     ],
   },
   {
@@ -117,7 +112,7 @@ function NavSection({
   );
 }
 
-/* ── shared nav tree (used in both desktop + mobile) ── */
+/* ── shared nav tree ── */
 function NavTree({ onLinkClick }: { onLinkClick?: () => void }) {
   return (
     <>
@@ -151,15 +146,11 @@ function MobileSidebar() {
 
   return (
     <>
-      {/* sticky top bar — mobile only */}
       <div className="lg:hidden sticky top-16 z-30 flex items-center justify-between bg-[#080808]/90 backdrop-blur-xl border-b border-green-500/[0.08] px-4 py-3">
         <div className="flex items-center gap-2.5">
           <div
             className="w-5 h-5 rounded-full border border-green-500/20 bg-center bg-cover shrink-0"
-            style={{
-              backgroundImage:
-                "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')",
-            }}
+            style={{ backgroundImage: `url('${ICON}')` }}
           />
           <span className="text-xs text-white/50 truncate max-w-[180px]">{currentLabel}</span>
         </div>
@@ -172,11 +163,9 @@ function MobileSidebar() {
         </button>
       </div>
 
-      {/* backdrop + drawer */}
       <AnimatePresence>
         {open && (
           <>
-            {/* backdrop */}
             <motion.div
               key="backdrop"
               initial={{ opacity: 0 }}
@@ -186,8 +175,6 @@ function MobileSidebar() {
               onClick={() => setOpen(false)}
               className="lg:hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
             />
-
-            {/* drawer panel */}
             <motion.div
               key="drawer"
               initial={{ x: "-100%" }}
@@ -196,7 +183,6 @@ function MobileSidebar() {
               transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
               className="lg:hidden fixed left-0 top-0 bottom-0 z-50 w-72 bg-[#080d09] border-r border-green-500/[0.08] flex flex-col overflow-y-auto"
             >
-              {/* drawer header */}
               <div className="flex items-center justify-between px-5 py-5 border-b border-white/[0.06]">
                 <Link
                   href="/"
@@ -205,19 +191,13 @@ function MobileSidebar() {
                 >
                   <div
                     className="w-7 h-7 rounded-full border border-green-500/20 bg-center bg-cover shadow-[0_0_20px_rgba(34,197,94,0.25)]"
-                    style={{
-                      backgroundImage:
-                        "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')",
-                    }}
+                    style={{ backgroundImage: `url('${ICON}')` }}
                   />
                   <div className="flex flex-col leading-tight">
-                    <span className="text-[9px] tracking-[0.25em] uppercase text-white/30">
-                      Zedkr
-                    </span>
+                    <span className="text-[9px] tracking-[0.25em] uppercase text-white/30">Zedkr</span>
                     <span className="text-sm font-semibold text-white/75">Docs</span>
                   </div>
                 </Link>
-
                 <button
                   onClick={() => setOpen(false)}
                   className="w-7 h-7 rounded-lg border border-white/10 bg-white/[0.04] flex items-center justify-center text-white/40 hover:text-white hover:bg-white/[0.08] transition-colors"
@@ -225,8 +205,6 @@ function MobileSidebar() {
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
-
-              {/* nav */}
               <div className="flex-1 flex flex-col px-4 pt-6 pb-8">
                 <NavTree onLinkClick={() => setOpen(false)} />
               </div>
@@ -238,28 +216,22 @@ function MobileSidebar() {
   );
 }
 
-/* ── default export: desktop + mobile combined ── */
+/* ── default export ── */
 export default function Sidebar() {
   return (
     <>
-      {/* ── desktop sidebar ── */}
       <aside className="w-52 shrink-0 hidden lg:block">
         <div className="sticky top-0 h-screen overflow-y-auto py-8 flex flex-col">
           <Link href="/" className="flex items-center gap-2.5 mb-10 px-1">
             <div
               className="w-6 h-6 rounded-full border border-green-500/20 bg-center bg-cover"
-              style={{
-                backgroundImage:
-                  "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')",
-              }}
+              style={{ backgroundImage: `url('${ICON}')` }}
             />
             <span className="text-sm font-semibold text-white/65 tracking-tight">Zedkr</span>
           </Link>
           <NavTree />
         </div>
       </aside>
-
-      {/* ── mobile hamburger + drawer ── */}
       <MobileSidebar />
     </>
   );

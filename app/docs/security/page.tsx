@@ -145,7 +145,7 @@ export default function SecuritySignatures() {
       </div>
 
       <DocNav
-        prev={{ label: "Addresses", href: "/docs/contracts/addresses" }}
+        prev={{ label: "Approval &amp; Gas", href: "/docs/transactions/approval-gas" }}
         next={{ label: "Replay Protection", href: "/docs/security/replay" }}
       />
     </PageWrapper>
