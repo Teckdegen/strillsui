@@ -57,7 +57,7 @@ async function fetchSevenDayCount(): Promise<number> {
   let nextPageParams: Record<string, any> | null = null;
 
   for (let page = 0; page < 15; page++) {
-    const url = nextPageParams
+    const url: string = nextPageParams
       ? `${TX_PAGE}&${new URLSearchParams(
           Object.fromEntries(
             Object.entries(nextPageParams).map(([k, v]) => [k, String(v)])
