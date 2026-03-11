@@ -1,100 +1,66 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "transferAll() — SDK Reference" };
+export const metadata = { title: "transferAll() — Zedkr SDK" };
 
-const signatureCode = `client.transferAll(
-  signer: ethers.Signer,
-  to: string,          // recipient address
-  token: string,       // ERC20 token address
-  decimals?: number    // token decimals (default: 18)
-): Promise<TransferAllResult>`;
-
-const resultCode = `interface TransferAllResult extends TxResult {
-  sentAmount: string;   // human-readable amount actually sent
-  feeDeducted: string;  // fee amount that was deducted
-  feeToken: string;     // address of the fee token used
-}`;
-
-const usageCode = `// Drain entire USDT balance — fee auto-deducted, rest goes to recipient
-const result = await client.transferAll(
-  signer,
-  "0x11E76F64Ec3E9A6867D5B462e247E8d08b1d8FFC",
-  "0xC1A5B41512496B80903D1f32d6dEa3a73212E71F", // USDT
-  6
-);
-
-console.log("Sent:", result.sentAmount, "USDT");
-console.log("Fee deducted:", result.feeDeducted, "USDT");
-console.log("tx:", result.txHash);`;
-
-const differentFeeCode = `// If the fee is paid in a different token, the full balance is sent
-// (e.g. user sends all FXRP, fee taken in USDT — they need USDT balance too)
-const result = await client.transferAll(
-  signer,
-  recipient,
-  FXRP_ADDRESS,
-  18
-);
-// result.sentAmount === full FXRP balance
-// result.feeDeducted is in USDT (different token)`;
+const usageCode = `import { Zedkr } from "zedkr";
+const client = await Zedkr.create({ provider });
+const result = await client.transferAll(signer, "0xRecipient", "0xUSDT", 6);
+console.log(\`Sent \${result.sentAmount} — fee: \${result.feeDeducted}\`);`;
 
 export default function SdkTransferAll() {
   return (
     <PageWrapper>
-      <Breadcrumb
-        items={[
-          { label: "Docs", href: "/docs" },
-          { label: "SDK Reference", href: "/docs/sdk" },
-          { label: "transferAll()" },
-        ]}
-      />
+      <Breadcrumb items={[{ label: "Docs", href: "/docs" }, { label: "SDK", href: "/docs/sdk" }, { label: "transferAll()" }]} />
 
       <h1 className="text-4xl font-bold text-white mb-3">transferAll()</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
-        Send the user&apos;s entire token balance in one shot. If the fee token matches the send
-        token, the fee is automatically deducted so the wallet drains to zero.
+        Drain the user&apos;s entire token balance in one shot. When the fee token matches the send token,
+        the fee is auto-deducted so the wallet goes to exactly zero.
       </p>
 
-      <h2 className="text-xl font-semibold text-white mb-3">Signature</h2>
-      <CodeBlock code={signatureCode} language="typescript" />
-
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Return value</h2>
-      <CodeBlock code={resultCode} language="typescript" />
-
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Usage</h2>
+      <h2 className="text-xl font-semibold text-white mb-3">Usage</h2>
       <CodeBlock code={usageCode} language="typescript" />
 
       <Callout type="tip">
-        <strong>Same-token fee deduction</strong> — when the fee token equals the send token
-        (e.g. sending USDT, fee in USDT), the SDK automatically computes
-        {" "}<code className="text-purple-300 text-xs bg-purple-500/10 px-1 rounded">balance − fee</code>
-        {" "}as the send amount. The wallet ends up at exactly zero.
+        <strong>Same-token fee deduction</strong> — sending USDT with the fee in USDT?
+        The SDK computes <code className="text-green-300 text-xs bg-green-500/10 px-1 rounded">balance − fee</code> automatically.
+        The wallet ends at exactly zero.
       </Callout>
 
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Cross-token fees</h2>
-      <CodeBlock code={differentFeeCode} language="typescript" />
+      <h2 className="text-xl font-semibold text-white mt-8 mb-4">Parameters</h2>
+      <div className="glass rounded-xl overflow-hidden mb-6">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-white/[0.06]">
+              <th className="text-left px-5 py-3 text-white/40 font-medium text-xs uppercase tracking-wide">Param</th>
+              <th className="text-left px-5 py-3 text-white/40 font-medium text-xs uppercase tracking-wide">Type</th>
+              <th className="text-left px-5 py-3 text-white/40 font-medium text-xs uppercase tracking-wide">Description</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/[0.04]">
+            {[
+              ["signer",   "ethers.Signer", "The user's wallet signer"],
+              ["to",       "string",        "Recipient wallet address"],
+              ["token",    "string",        "ERC20 token address"],
+              ["decimals", "number?",       "Token decimals — defaults to 18"],
+            ].map(([p, t, d]) => (
+              <tr key={p}>
+                <td className="px-5 py-3 font-mono text-green-300/80 text-xs">{p}</td>
+                <td className="px-5 py-3 font-mono text-white/40 text-xs">{t}</td>
+                <td className="px-5 py-3 text-white/55 text-xs">{d}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <Callout type="info">
-        If the relayer quotes a different token for the fee, the full balance of the send token
-        is transferred and the fee is pulled from the user&apos;s fee-token balance separately.
-      </Callout>
-
-      <h2 className="text-xl font-semibold text-white mt-8 mb-4">How it works internally</h2>
-      <div className="flex flex-col gap-3 mb-6">
-        {[
-          "Reads the user's full token balance on-chain",
-          "Calls getFeeQuote() to determine the fee token and amount",
-          "If fee token === send token: sendAmount = balance − feeAmount",
-          "Calls transfer() with the computed amount",
-          "Returns enriched result with sentAmount and feeDeducted",
-        ].map((step, i) => (
-          <div key={i} className="flex items-start gap-3 text-sm text-white/55">
-            <span className="w-5 h-5 rounded-full bg-purple-600/20 border border-purple-600/30 flex items-center justify-center shrink-0 text-xs text-purple-400 font-bold mt-0.5">
-              {i + 1}
-            </span>
-            {step}
-          </div>
-        ))}
+      <h2 className="text-xl font-semibold text-white mb-3">Return value</h2>
+      <div className="glass rounded-xl p-4 text-sm text-white/55 leading-relaxed">
+        Returns <code className="text-green-300/80 text-xs bg-green-500/10 px-1 rounded">TransferAllResult</code> which extends{" "}
+        <code className="text-green-300/80 text-xs bg-green-500/10 px-1 rounded">TxResult</code> with{" "}
+        <code className="text-green-300/80 text-xs">sentAmount</code>,{" "}
+        <code className="text-green-300/80 text-xs">feeDeducted</code>, and{" "}
+        <code className="text-green-300/80 text-xs">feeToken</code>.
       </div>
 
       <DocNav
