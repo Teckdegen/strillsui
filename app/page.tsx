@@ -9,7 +9,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#080808] text-white">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 pt-6 pb-10">
         {/* Header bar */}
-        <div className="rounded-2xl border border-green-500/[0.10] bg-[rgba(8,8,8,0.92)] backdrop-blur-2xl shadow-[0_20px_80px_rgba(0,0,0,0.9)]">
+        <div className="rounded-2xl border border-green-500/20 bg-[rgba(4,16,6,0.90)] backdrop-blur-2xl shadow-[0_0_40px_rgba(34,197,94,0.06),0_20px_80px_rgba(0,0,0,0.9)]">
           <Navbar />
         </div>
 

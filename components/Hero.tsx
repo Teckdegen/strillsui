@@ -15,15 +15,15 @@ const HOLD_MS     = 2800;
 /* ── 3 token nodes only ── */
 const nodes = [
   {
-    id: "usdt",  label: "USDT",   sub: "fee token", x: 14, y: 26, delay: 0,
+    id: "usdt",  label: "USDT",   sub: "fee token", x: 10, y: 10, delay: 0,
     img: "https://image2url.com/r2/default/images/1773134129636-2335aa43-ef63-47e9-8fad-12349e820c38.png",
   },
   {
-    id: "fxrp",  label: "FXRP",   sub: "fee token", x: 82, y: 22, delay: 0.2,
+    id: "fxrp",  label: "FXRP",   sub: "fee token", x: 88, y: 10, delay: 0.2,
     img: "https://image2url.com/r2/default/images/1773134218523-49b58045-951e-4ad2-9ab5-1cc0897fad86.jpg",
   },
   {
-    id: "wflr",  label: "WC2FLR", sub: "fee token", x: 13, y: 72, delay: 0.4,
+    id: "wflr",  label: "WC2FLR", sub: "fee token", x: 50, y: 85, delay: 0.4,
     img: "https://image2url.com/r2/default/images/1773134181553-4b674bcc-3bf6-412b-bf4e-dfa755bbeeb6.png",
   },
 ];
@@ -169,9 +169,9 @@ export default function Hero() {
 
       {/* lines — only 3 */}
       <div className="pointer-events-none absolute inset-0">
-        <Line x1={14} y1={26} x2={50} y2={50} delay={0} />
-        <Line x1={82} y1={22} x2={50} y2={50} delay={0.6} />
-        <Line x1={13} y1={72} x2={50} y2={50} delay={1.2} />
+        <Line x1={10} y1={10} x2={50} y2={50} delay={0} />
+        <Line x1={88} y1={10} x2={50} y2={50} delay={0.6} />
+        <Line x1={50} y1={85} x2={50} y2={50} delay={1.2} />
       </div>
 
       {/* floating nodes */}

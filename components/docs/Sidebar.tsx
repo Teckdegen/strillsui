@@ -47,13 +47,7 @@ const nav = [
 ];
 
 /* ── single collapsible section ── */
-function NavSection({
-  section,
-  onLinkClick,
-}: {
-  section: (typeof nav)[0];
-  onLinkClick?: () => void;
-}) {
+function NavSection({ section, onLinkClick }: { section: (typeof nav)[0]; onLinkClick?: () => void }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
 
@@ -66,9 +60,7 @@ function NavSection({
         <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/25">
           {section.title}
         </span>
-        <ChevronDown
-          className={`w-3 h-3 text-white/15 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
+        <ChevronDown className={`w-3 h-3 text-white/15 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
       <AnimatePresence initial={false}>
@@ -89,9 +81,7 @@ function NavSection({
                     href={item.href}
                     onClick={onLinkClick}
                     className={`relative flex items-center py-1.5 pl-3 pr-2 text-sm transition-colors duration-150 rounded-md ${
-                      active
-                        ? "text-white font-medium"
-                        : "text-white/40 hover:text-white/75"
+                      active ? "text-white font-medium" : "text-white/40 hover:text-white/75"
                     }`}
                   >
                     {active && (
@@ -135,8 +125,9 @@ function NavTree({ onLinkClick }: { onLinkClick?: () => void }) {
   );
 }
 
-/* ── mobile top bar + drawer ── */
-function MobileSidebar() {
+/* ── mobile hamburger button + drawer ── */
+/* The button bar is rendered FIXED (top-16) so it's out of the flex layout flow */
+export function MobileMenuBar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -146,13 +137,14 @@ function MobileSidebar() {
 
   return (
     <>
-      <div className="lg:hidden sticky top-16 z-30 flex items-center justify-between bg-[#080808]/90 backdrop-blur-xl border-b border-green-500/[0.08] px-4 py-3">
+      {/* Fixed top bar — mobile only, does NOT affect flex layout */}
+      <div className="lg:hidden fixed top-16 left-0 right-0 z-30 flex items-center justify-between bg-[#080808]/95 backdrop-blur-xl border-b border-green-500/[0.08] px-4 py-3">
         <div className="flex items-center gap-2.5">
           <div
             className="w-5 h-5 rounded-full border border-green-500/20 bg-center bg-cover shrink-0"
             style={{ backgroundImage: `url('${ICON}')` }}
           />
-          <span className="text-xs text-white/50 truncate max-w-[180px]">{currentLabel}</span>
+          <span className="text-xs text-white/50 truncate max-w-[200px]">{currentLabel}</span>
         </div>
         <button
           onClick={() => setOpen(true)}
@@ -163,6 +155,7 @@ function MobileSidebar() {
         </button>
       </div>
 
+      {/* Backdrop + drawer */}
       <AnimatePresence>
         {open && (
           <>
@@ -184,11 +177,7 @@ function MobileSidebar() {
               className="lg:hidden fixed left-0 top-0 bottom-0 z-50 w-72 bg-[#080d09] border-r border-green-500/[0.08] flex flex-col overflow-y-auto"
             >
               <div className="flex items-center justify-between px-5 py-5 border-b border-white/[0.06]">
-                <Link
-                  href="/"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-2.5"
-                >
+                <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
                   <div
                     className="w-7 h-7 rounded-full border border-green-500/20 bg-center bg-cover shadow-[0_0_20px_rgba(34,197,94,0.25)]"
                     style={{ backgroundImage: `url('${ICON}')` }}
@@ -216,23 +205,20 @@ function MobileSidebar() {
   );
 }
 
-/* ── default export ── */
+/* ── desktop sidebar only ── */
 export default function Sidebar() {
   return (
-    <>
-      <aside className="w-52 shrink-0 hidden lg:block">
-        <div className="sticky top-0 h-screen overflow-y-auto py-8 flex flex-col">
-          <Link href="/" className="flex items-center gap-2.5 mb-10 px-1">
-            <div
-              className="w-6 h-6 rounded-full border border-green-500/20 bg-center bg-cover"
-              style={{ backgroundImage: `url('${ICON}')` }}
-            />
-            <span className="text-sm font-semibold text-white/65 tracking-tight">Zedkr</span>
-          </Link>
-          <NavTree />
-        </div>
-      </aside>
-      <MobileSidebar />
-    </>
+    <aside className="w-52 shrink-0 hidden lg:block">
+      <div className="sticky top-0 h-screen overflow-y-auto py-8 flex flex-col">
+        <Link href="/" className="flex items-center gap-2.5 mb-10 px-1">
+          <div
+            className="w-6 h-6 rounded-full border border-green-500/20 bg-center bg-cover"
+            style={{ backgroundImage: `url('${ICON}')` }}
+          />
+          <span className="text-sm font-semibold text-white/65 tracking-tight">Zedkr</span>
+        </Link>
+        <NavTree />
+      </div>
+    </aside>
   );
 }

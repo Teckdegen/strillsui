@@ -11,8 +11,8 @@ const txns = [
     description:
       "Send USDT, FXRP, WFLR, or any ERC20 token to any address on Flare — no FLR in your wallet required.",
     tags: ["USDT", "FXRP", "Any ERC20"],
-    href: "/docs/transactions/transfer",
-    color: "#7c3aed",
+    href: "/docs/transactions",
+    color: "#16a34a",
   },
   {
     icon: Wallet,
@@ -21,7 +21,7 @@ const txns = [
       "Transfer your entire token balance in one click. Fee is automatically calculated and deducted from the amount sent.",
     tags: ["Full balance", "Auto fee"],
     href: "/docs/transactions/send-all",
-    color: "#a855f7",
+    color: "#22c55e",
   },
   {
     icon: ArrowLeftRight,
@@ -30,7 +30,7 @@ const txns = [
       "Swap any token pair on BlazeSwap via the Uniswap V2 router. Live quote with 2% slippage protection, all gasless.",
     tags: ["BlazeSwap", "FXRP → USDT"],
     href: "/docs/transactions/swap",
-    color: "#8b5cf6",
+    color: "#4ade80",
   },
   {
     icon: FileCode2,
@@ -39,16 +39,16 @@ const txns = [
       "Call any smart contract function on Flare — DeFi protocols, NFTs, staking contracts — without paying FLR gas.",
     tags: ["Any contract", "Any function"],
     href: "/docs/transactions/call",
-    color: "#6d28d9",
+    color: "#15803d",
   },
   {
     icon: Fuel,
-    title: "Approval Gas Bootstrap",
+    title: "Approval & Gas",
     description:
-      "First time? The relayer sends you exactly enough FLR to run one approve() transaction. Then you're gasless forever.",
-    tags: ["One-time", "Free FLR"],
+      "First time? One ERC20 approve transaction is all you need. After that, every Zedkr transaction is completely gasless.",
+    tags: ["One-time", "Then gasless"],
     href: "/docs/transactions/approval-gas",
-    color: "#7c3aed",
+    color: "#16a34a",
   },
 ];
 
@@ -56,8 +56,8 @@ export default function Transactions() {
   return (
     <section id="transactions" className="relative py-32 px-6 overflow-hidden">
       {/* Decorative */}
-      <div className="orb w-[600px] h-[400px] bg-purple-900 bottom-0 left-0 opacity-15" />
-      <div className="orb w-[400px] h-[400px] bg-violet-800 top-0 right-0 opacity-10" style={{ animationDelay: "1.5s" }} />
+      <div className="orb w-[600px] h-[400px] bg-green-900 bottom-0 left-0 opacity-15" />
+      <div className="orb w-[400px] h-[400px] bg-green-800 top-0 right-0 opacity-10" style={{ animationDelay: "1.5s" }} />
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
@@ -105,7 +105,7 @@ export default function Transactions() {
 
                   {/* Text */}
                   <div className="flex-1">
-                    <h3 className="text-base font-bold text-white mb-2 group-hover:text-purple-300 transition-colors duration-200">
+                    <h3 className="text-base font-bold text-white mb-2 group-hover:text-green-300 transition-colors duration-200">
                       {tx.title}
                     </h3>
                     <p className="text-sm text-white/45 leading-relaxed">{tx.description}</p>
@@ -120,7 +120,7 @@ export default function Transactions() {
                         style={{
                           background: `${tx.color}15`,
                           border: `1px solid ${tx.color}25`,
-                          color: "#c4b5fd",
+                          color: "#86efac",
                         }}
                       >
                         {tag}
@@ -129,7 +129,7 @@ export default function Transactions() {
                   </div>
 
                   {/* Read more */}
-                  <div className="flex items-center gap-1 text-xs text-purple-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 -mb-1">
+                  <div className="flex items-center gap-1 text-xs text-green-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 -mb-1">
                     <span>Read docs</span>
                     <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -144,9 +144,9 @@ export default function Transactions() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="glass-card p-7 flex flex-col items-center justify-center text-center gap-4 border-dashed border-purple-600/20 hover:border-purple-500/40"
+            className="glass-card p-7 flex flex-col items-center justify-center text-center gap-4 border-dashed border-green-600/20 hover:border-green-500/40"
           >
-            <div className="w-12 h-12 rounded-xl bg-purple-600/10 border border-purple-600/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-green-600/10 border border-green-600/20 flex items-center justify-center">
               <span className="text-2xl">⚡</span>
             </div>
             <div>
@@ -157,7 +157,7 @@ export default function Transactions() {
             </div>
             <Link
               href="/docs"
-              className="text-xs text-purple-400 font-medium hover:text-purple-300 transition-colors flex items-center gap-1"
+              className="text-xs text-green-400 font-medium hover:text-green-300 transition-colors flex items-center gap-1"
             >
               Explore the docs <ArrowRight className="w-3 h-3" />
             </Link>
