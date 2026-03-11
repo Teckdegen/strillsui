@@ -102,7 +102,7 @@ function NavSection({
                     {active && (
                       <motion.div
                         layoutId="sidebar-active"
-                        className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-purple-500"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-green-500"
                       />
                     )}
                     {item.label}
@@ -131,7 +131,7 @@ function NavTree({ onLinkClick }: { onLinkClick?: () => void }) {
           href="https://coston2-explorer.flare.network"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-white/20 hover:text-white/45 transition-colors"
+          className="text-xs text-white/20 hover:text-green-400/60 transition-colors"
         >
           Block Explorer
         </a>
@@ -145,7 +145,6 @@ function MobileSidebar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // find the current page label for the bar
   const currentLabel = nav
     .flatMap((s) => s.items)
     .find((i) => i.href === pathname)?.label ?? "Docs";
@@ -153,10 +152,10 @@ function MobileSidebar() {
   return (
     <>
       {/* sticky top bar — mobile only */}
-      <div className="lg:hidden sticky top-16 z-30 flex items-center justify-between bg-[#06030f]/90 backdrop-blur-xl border-b border-white/[0.06] px-4 py-3">
+      <div className="lg:hidden sticky top-16 z-30 flex items-center justify-between bg-[#080808]/90 backdrop-blur-xl border-b border-green-500/[0.08] px-4 py-3">
         <div className="flex items-center gap-2.5">
           <div
-            className="w-5 h-5 rounded-full border border-white/15 bg-center bg-cover shrink-0"
+            className="w-5 h-5 rounded-full border border-green-500/20 bg-center bg-cover shrink-0"
             style={{
               backgroundImage:
                 "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')",
@@ -166,7 +165,7 @@ function MobileSidebar() {
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/55 hover:text-white hover:bg-white/[0.08] transition-colors"
+          className="flex items-center gap-1.5 rounded-lg border border-green-500/15 bg-green-500/[0.05] px-3 py-1.5 text-xs text-white/55 hover:text-white hover:bg-green-500/10 transition-colors"
         >
           <Menu className="w-3.5 h-3.5" />
           <span>Menu</span>
@@ -195,7 +194,7 @@ function MobileSidebar() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-              className="lg:hidden fixed left-0 top-0 bottom-0 z-50 w-72 bg-[#09050f] border-r border-white/[0.07] flex flex-col overflow-y-auto"
+              className="lg:hidden fixed left-0 top-0 bottom-0 z-50 w-72 bg-[#080d09] border-r border-green-500/[0.08] flex flex-col overflow-y-auto"
             >
               {/* drawer header */}
               <div className="flex items-center justify-between px-5 py-5 border-b border-white/[0.06]">
@@ -205,7 +204,7 @@ function MobileSidebar() {
                   className="flex items-center gap-2.5"
                 >
                   <div
-                    className="w-7 h-7 rounded-full border border-white/20 bg-center bg-cover shadow-[0_0_20px_rgba(124,58,237,0.35)]"
+                    className="w-7 h-7 rounded-full border border-green-500/20 bg-center bg-cover shadow-[0_0_20px_rgba(34,197,94,0.25)]"
                     style={{
                       backgroundImage:
                         "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')",
@@ -213,7 +212,7 @@ function MobileSidebar() {
                   />
                   <div className="flex flex-col leading-tight">
                     <span className="text-[9px] tracking-[0.25em] uppercase text-white/30">
-                      Strills Paymaster
+                      Zedkr
                     </span>
                     <span className="text-sm font-semibold text-white/75">Docs</span>
                   </div>
@@ -248,13 +247,13 @@ export default function Sidebar() {
         <div className="sticky top-0 h-screen overflow-y-auto py-8 flex flex-col">
           <Link href="/" className="flex items-center gap-2.5 mb-10 px-1">
             <div
-              className="w-6 h-6 rounded-full border border-white/15 bg-center bg-cover"
+              className="w-6 h-6 rounded-full border border-green-500/20 bg-center bg-cover"
               style={{
                 backgroundImage:
                   "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')",
               }}
             />
-            <span className="text-sm font-semibold text-white/65 tracking-tight">Strills Pay</span>
+            <span className="text-sm font-semibold text-white/65 tracking-tight">Zedkr</span>
           </Link>
           <NavTree />
         </div>

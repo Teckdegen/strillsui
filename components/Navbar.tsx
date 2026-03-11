@@ -9,7 +9,7 @@ export default function Navbar() {
       {/* Brand */}
       <Link href="/" className="flex items-center gap-3">
         <div
-          className="w-9 h-9 rounded-full border border-white/15 bg-center bg-cover shadow-[0_0_40px_rgba(124,58,237,0.45)]"
+          className="w-9 h-9 rounded-full border border-green-500/20 bg-center bg-cover shadow-[0_0_32px_rgba(34,197,94,0.30)]"
           style={{
             backgroundImage:
               "url('https://image2url.com/r2/default/images/1773134267974-eb80d78c-4412-49a3-aa8b-2ab03d0da0fb.png')",
@@ -17,7 +17,7 @@ export default function Navbar() {
         />
         <div className="flex flex-col leading-tight">
           <span className="text-[10px] tracking-[0.3em] uppercase text-white/40">
-            Strills Paymaster
+            Zedkr
           </span>
           <span className="text-sm font-semibold text-white/80">Gasless for Flare</span>
         </div>
@@ -40,7 +40,7 @@ export default function Navbar() {
       <div className="hidden sm:flex items-center gap-3">
         <Link
           href="/docs"
-          className="rounded-full border border-white/20 bg-white/6 px-5 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+          className="rounded-full border border-green-500/25 bg-green-500/[0.07] px-5 py-1.5 text-xs font-semibold text-green-300/80 hover:bg-green-500/15 hover:text-green-200 transition-colors"
         >
           Open Docs
         </Link>

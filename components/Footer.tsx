@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/[0.06] px-8 pb-6 pt-6">
+    <footer className="border-t border-green-500/[0.08] px-8 pb-6 pt-6">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -16,7 +15,7 @@ export default function Footer() {
           Powered by Flare
         </span>
         <span className="text-center text-white/45 sm:text-right">
-          © {new Date().getFullYear()} Strills Paymaster — gasless infrastructure for DeFi wallets.
+          © {new Date().getFullYear()} Zedkr — gasless infrastructure for DeFi wallets.
         </span>
       </motion.div>
     </footer>

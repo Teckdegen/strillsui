@@ -37,9 +37,9 @@ export function DocNav({
       {prev ? (
         <Link
           href={prev.href}
-          className="group flex flex-col gap-0.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 transition-all duration-200 hover:border-purple-500/25 hover:bg-purple-500/5"
+          className="group flex flex-col gap-0.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 transition-all duration-200 hover:border-green-500/25 hover:bg-green-500/[0.05]"
         >
-          <span className="text-[10px] uppercase tracking-[0.18em] text-white/25 group-hover:text-purple-400/60 transition-colors">← Previous</span>
+          <span className="text-[10px] uppercase tracking-[0.18em] text-white/25 group-hover:text-green-400/60 transition-colors">← Previous</span>
           <span className="text-sm font-medium text-white/70 group-hover:text-white transition-colors">{prev.label}</span>
         </Link>
       ) : (
@@ -48,9 +48,9 @@ export function DocNav({
       {next ? (
         <Link
           href={next.href}
-          className="group flex flex-col gap-0.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 text-right transition-all duration-200 hover:border-purple-500/25 hover:bg-purple-500/5 col-start-2"
+          className="group flex flex-col gap-0.5 rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 text-right transition-all duration-200 hover:border-green-500/25 hover:bg-green-500/[0.05] col-start-2"
         >
-          <span className="text-[10px] uppercase tracking-[0.18em] text-white/25 group-hover:text-purple-400/60 transition-colors">Next →</span>
+          <span className="text-[10px] uppercase tracking-[0.18em] text-white/25 group-hover:text-green-400/60 transition-colors">Next →</span>
           <span className="text-sm font-medium text-white/70 group-hover:text-white transition-colors">{next.label}</span>
         </Link>
       ) : null}
@@ -68,19 +68,19 @@ export function CodeBlock({ code, language = "typescript" }: { code: string; lan
   };
 
   return (
-    <div className="my-5 overflow-hidden rounded-xl border border-white/[0.07] bg-[#0b0714]">
+    <div className="my-5 overflow-hidden rounded-xl border border-green-500/[0.10] bg-[#050c07]">
       {/* header bar */}
-      <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-2.5">
+      <div className="flex items-center justify-between border-b border-green-500/[0.08] px-4 py-2.5">
         <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/25">{language}</span>
         <button
           onClick={copy}
-          className="text-[10px] uppercase tracking-[0.15em] text-white/25 hover:text-purple-300 transition-colors duration-150"
+          className="text-[10px] uppercase tracking-[0.15em] text-white/25 hover:text-green-400 transition-colors duration-150"
         >
           {copied ? "✓ Copied" : "Copy"}
         </button>
       </div>
       {/* code */}
-      <pre className="overflow-x-auto p-5 text-[13px] leading-relaxed text-purple-200/80 font-mono">
+      <pre className="overflow-x-auto p-5 text-[13px] leading-relaxed text-green-200/75 font-mono">
         <code>{code}</code>
       </pre>
     </div>
@@ -96,9 +96,9 @@ export function Callout({
   children: React.ReactNode;
 }) {
   const map = {
-    info:    { border: "border-l-blue-500/60",   bg: "bg-blue-500/5",   text: "text-blue-300/80",   label: "Note" },
-    warning: { border: "border-l-amber-500/60",  bg: "bg-amber-500/5",  text: "text-amber-300/80",  label: "Warning" },
-    tip:     { border: "border-l-purple-500/60", bg: "bg-purple-500/5", text: "text-purple-300/80", label: "Tip" },
+    info:    { border: "border-l-blue-500/60",   bg: "bg-blue-500/5",    text: "text-blue-300/80",   label: "Note" },
+    warning: { border: "border-l-amber-500/60",  bg: "bg-amber-500/5",   text: "text-amber-300/80",  label: "Warning" },
+    tip:     { border: "border-l-green-500/60",  bg: "bg-green-500/[0.05]", text: "text-green-300/80", label: "Tip" },
   };
   const { border, bg, text, label } = map[type];
 
