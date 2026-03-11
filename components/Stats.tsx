@@ -3,9 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 
-const ROUTER      = "0x658a064aE85c983869e32D478AD3B41a96982114";
-const ADDR_API    = `https://coston2-explorer.flare.network/api/v2/addresses/${ROUTER}`;
-const TX_API      = `https://coston2-explorer.flare.network/api/v2/addresses/${ROUTER}/transactions?limit=10`;
+const ROUTER   = "0x1214ccD861f187aB017F20617C602638B125689B";
+const BASE_URL = `https://coston2-explorer.flare.network/api/v2/addresses/${ROUTER}`;
+const TX_FEED  = `${BASE_URL}/transactions?limit=10`;
+const TX_PAGE  = `${BASE_URL}/transactions?limit=50`;
 
 interface Tx {
   hash: string;
@@ -48,6 +49,38 @@ function methodColor(label: string) {
   return METHOD_COLORS[label] ?? METHOD_COLORS.call;
 }
 
+/* ── paginate through transactions and count those in the last 7 days ── */
+async function fetchSevenDayCount(): Promise<number> {
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  let count = 0;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let nextPageParams: Record<string, any> | null = null;
+
+  for (let page = 0; page < 15; page++) {
+    const url = nextPageParams
+      ? `${TX_PAGE}&${new URLSearchParams(
+          Object.fromEntries(
+            Object.entries(nextPageParams).map(([k, v]) => [k, String(v)])
+          )
+        )}`
+      : TX_PAGE;
+
+    const res  = await fetch(url);
+    const data = await res.json();
+    const items: { timestamp: string }[] = data.items ?? [];
+
+    for (const tx of items) {
+      if (new Date(tx.timestamp).getTime() < cutoff) return count;
+      count++;
+    }
+
+    if (!data.next_page_params || items.length === 0) break;
+    nextPageParams = data.next_page_params;
+  }
+
+  return count;
+}
+
 /* ── animated number counter ── */
 function CountUp({ target }: { target: number }) {
   const [display, setDisplay] = useState(0);
@@ -57,10 +90,9 @@ function CountUp({ target }: { target: number }) {
     const duration = 1400;
     const start    = Date.now();
     const tick = () => {
-      const elapsed = Date.now() - start;
+      const elapsed  = Date.now() - start;
       const progress = Math.min(elapsed / duration, 1);
-      // ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
+      const eased    = 1 - Math.pow(1 - progress, 3);
       setDisplay(Math.floor(eased * target));
       if (progress < 1) requestAnimationFrame(tick);
     };
@@ -89,14 +121,13 @@ export default function Stats() {
 
   async function load() {
     try {
-      const [infoRes, txRes] = await Promise.all([
-        fetch(ADDR_API),
-        fetch(TX_API),
+      const [sevenDay, txRes] = await Promise.all([
+        fetchSevenDayCount(),
+        fetch(TX_FEED),
       ]);
-      const info   = await infoRes.json();
       const txData = await txRes.json();
 
-      setTxCount(info.transaction_count ?? null);
+      setTxCount(sevenDay);
 
       const items: Tx[] = (txData.items ?? []).map((t: {
         hash: string;
@@ -139,7 +170,7 @@ export default function Stats() {
 
       <div className="max-w-3xl mx-auto">
 
-        {/* ── total count banner ── */}
+        {/* ── 7-day count banner ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -147,7 +178,7 @@ export default function Stats() {
           transition={{ duration: 0.55 }}
           className="mb-12 text-center"
         >
-          <p className="text-[10px] uppercase tracking-[0.3em] text-green-400/60 mb-4">All time</p>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-green-400/60 mb-4">Past 7 days</p>
 
           <div className="text-[4.5rem] sm:text-[6rem] font-black leading-none tracking-tight mb-3">
             {txCount === null ? (
@@ -158,7 +189,7 @@ export default function Stats() {
           </div>
 
           <p className="text-sm text-white/30 tracking-wide">
-            gasless transactions processed so far
+            gasless transactions processed
           </p>
 
           {/* live dot */}
