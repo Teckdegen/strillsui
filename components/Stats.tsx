@@ -3,11 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 
-const RELAYER = "0xA823d13118E65DD1beA758a78e9016B6584E037c";
+// Track ALL interactions with the router contract
 const ROUTER  = "0x1214ccD861f187aB017F20617C602638B125689B";
-
-// Fetch FROM the relayer wallet — filter where to = router contract
-const RELAYER_TX = `https://coston2-explorer.flare.network/api/v2/addresses/${RELAYER}/transactions?filter=from&limit=50`;
+const BASE    = `https://coston2-explorer.flare.network/api/v2/addresses/${ROUTER}`;
+const TX_URL  = `${BASE}/transactions?filter=to&limit=50`;
 
 interface Tx {
   hash: string;
@@ -23,8 +22,8 @@ function short(addr: string) {
 
 function timeAgo(iso: string) {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-  if (diff < 60)   return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 60)    return `${diff}s ago`;
+  if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
   return `${Math.floor(diff / 86400)}d ago`;
 }
@@ -51,21 +50,18 @@ function methodColor(label: string) {
   return METHOD_COLORS[label] ?? METHOD_COLORS.call;
 }
 
-/* ── fetch all relayer→router txs, paginating until we exit the 7-day window ── */
-async function fetchRelayerTxs(maxPages = 15): Promise<{
-  feed: Tx[];
-  sevenDayCount: number;
-}> {
+/* ── paginate router txs, collect feed + 7-day count ── */
+async function fetchRouterTxs(): Promise<{ feed: Tx[]; sevenDayCount: number }> {
   const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const allMatching: Tx[] = [];
+  const feed: Tx[] = [];
   let sevenDayCount = 0;
   let nextPageParams: Record<string, string> | null = null;
   let reachedCutoff = false;
 
-  for (let page = 0; page < maxPages; page++) {
+  for (let page = 0; page < 15; page++) {
     const url: string = nextPageParams
-      ? `${RELAYER_TX}&${new URLSearchParams(nextPageParams)}`
-      : RELAYER_TX;
+      ? `${TX_URL}&${new URLSearchParams(nextPageParams)}`
+      : TX_URL;
 
     const res  = await fetch(url);
     const data = await res.json();
@@ -76,22 +72,18 @@ async function fetchRelayerTxs(maxPages = 15): Promise<{
       status?: string;
       result?: string;
       from?: { hash: string };
-      to?: { hash: string } | null;
     }[] = data.items ?? [];
 
     for (const t of items) {
-      // Only interactions where to = router contract
-      if (t.to?.hash?.toLowerCase() !== ROUTER.toLowerCase()) continue;
-
       const tx: Tx = {
         hash:      t.hash,
         timestamp: t.timestamp,
         method:    t.method ?? null,
         status:    t.status ?? t.result ?? "ok",
-        from:      t.from?.hash ?? RELAYER,
+        from:      t.from?.hash ?? "",
       };
 
-      allMatching.push(tx);
+      if (feed.length < 5) feed.push(tx);
 
       if (new Date(t.timestamp).getTime() >= cutoff) {
         sevenDayCount++;
@@ -102,14 +94,13 @@ async function fetchRelayerTxs(maxPages = 15): Promise<{
 
     if (reachedCutoff || !data.next_page_params || items.length === 0) break;
     nextPageParams = Object.fromEntries(
-      Object.entries(data.next_page_params as Record<string, unknown>).map(([k, v]) => [k, String(v)])
+      Object.entries(data.next_page_params as Record<string, unknown>).map(
+        ([k, v]) => [k, String(v)]
+      )
     );
   }
 
-  return {
-    feed: allMatching.slice(0, 5),
-    sevenDayCount,
-  };
+  return { feed, sevenDayCount };
 }
 
 /* ── animated number counter ── */
@@ -119,10 +110,10 @@ function CountUp({ target }: { target: number }) {
 
   useEffect(() => {
     if (target === prev.current) return;
-    const from = prev.current;
-    prev.current = target;
+    const from     = prev.current;
+    prev.current   = target;
     const duration = 1400;
-    const start = Date.now();
+    const start    = Date.now();
     const tick = () => {
       const elapsed  = Date.now() - start;
       const progress = Math.min(elapsed / duration, 1);
@@ -155,7 +146,7 @@ export default function Stats() {
 
   async function load() {
     try {
-      const { feed, sevenDayCount } = await fetchRelayerTxs();
+      const { feed, sevenDayCount } = await fetchRouterTxs();
 
       setSevenDay(sevenDayCount);
 
@@ -185,7 +176,7 @@ export default function Stats() {
 
       <div className="max-w-3xl mx-auto">
 
-        {/* ── 7-day count banner ── */}
+        {/* ── 7-day count ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -230,10 +221,7 @@ export default function Stats() {
         >
           {/* header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.05]">
-            <div>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-white/28">Recent activity</span>
-              <span className="ml-2 text-[9px] text-white/15">relayer → router</span>
-            </div>
+            <span className="text-[10px] uppercase tracking-[0.2em] text-white/28">Recent activity</span>
             <div className="flex items-center gap-1.5 text-[10px] text-green-400/50">
               <motion.div
                 animate={{ opacity: [1, 0.25, 1] }}
@@ -292,7 +280,7 @@ export default function Stats() {
                       </span>
                     </div>
                     <span className="text-xs font-mono text-white/28 text-right">
-                      {short(RELAYER)}
+                      {tx.from ? short(tx.from) : "—"}
                     </span>
                     <span className={`text-[9px] uppercase tracking-[0.12em] font-semibold px-2 py-0.5 rounded-full border ${color} whitespace-nowrap`}>
                       {label}
@@ -310,7 +298,7 @@ export default function Stats() {
           <div className="flex items-center justify-between px-5 py-3 border-t border-white/[0.05] bg-white/[0.01]">
             <span className="text-[10px] text-white/15">Coston2 testnet</span>
             <a
-              href={`https://coston2-explorer.flare.network/address/${RELAYER}`}
+              href={`https://coston2-explorer.flare.network/address/${ROUTER}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] uppercase tracking-[0.16em] text-white/20 hover:text-green-400/60 transition-colors"
