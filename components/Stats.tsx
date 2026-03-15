@@ -95,9 +95,9 @@ async function fetchRouterData(): Promise<{ feed: Tx[]; sevenDayCount: number }>
   );
 
   // Collect unique block numbers, fetch them all at once
-  const blockNums = [...new Set(
+  const blockNums = Array.from(new Set(
     pairs.filter(Boolean).map(p => p![1].blockNumber)
-  )];
+  ));
   const blockMap: Record<string, { timestamp: string }> = {};
   await Promise.all(
     blockNums.map(async bn => {
