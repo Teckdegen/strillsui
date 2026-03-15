@@ -3,21 +3,154 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 
-// Track ALL interactions with the router contract
-const ROUTER  = "0x1214ccD861f187aB017F20617C602638B125689B";
-const BASE    = `https://coston2-explorer.flare.network/api/v2/addresses/${ROUTER}`;
-const TX_URL  = `${BASE}/transactions?filter=to&limit=50`;
+const RPC    = "https://coston2-api.flare.network/ext/bc/C/rpc";
+const ROUTER = "0x1214ccD861f187aB017F20617C602638B125689B";
+
+// Coston2 ~1s block time → 7 days ≈ 604 800 blocks
+const BLOCKS_7D = 604_800;
+
+let _id = 0;
+async function rpc<T>(method: string, params: unknown[]): Promise<T> {
+  const r = await fetch(RPC, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: ++_id, method, params }),
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d.result as T;
+}
+
+interface RawLog { transactionHash: string; blockNumber: string; }
+
+// Divide-and-conquer: handles any RPC block-range limit automatically
+async function countTxsInRange(from: number, to: number, depth = 0): Promise<number> {
+  if (from > to || depth > 24) return 0;
+  try {
+    const logs = await rpc<RawLog[]>("eth_getLogs", [{
+      address: ROUTER,
+      fromBlock: `0x${from.toString(16)}`,
+      toBlock:   `0x${to.toString(16)}`,
+    }]);
+    return new Set((logs ?? []).map(l => l.transactionHash)).size;
+  } catch {
+    if (from >= to) return 0;
+    const mid = Math.floor((from + to) / 2);
+    const [l, r] = await Promise.all([
+      countTxsInRange(from,     mid, depth + 1),
+      countTxsInRange(mid + 1,  to,  depth + 1),
+    ]);
+    return l + r;
+  }
+}
 
 interface Tx {
   hash: string;
+  from: string;
   timestamp: string;
   method: string | null;
   status: string;
-  from: string;
 }
 
+async function fetchRouterData(): Promise<{ feed: Tx[]; sevenDayCount: number }> {
+  // Current block
+  const currentHex = await rpc<string>("eth_blockNumber", []);
+  const current    = parseInt(currentHex, 16);
+  const from7d     = Math.max(0, current - BLOCKS_7D);
+  const fromFeed   = Math.max(0, current - 10_000); // ~last 2-3 hrs for feed
+
+  // Run 7-day count + feed logs in parallel
+  const [sevenDayCount, feedLogs] = await Promise.all([
+    countTxsInRange(from7d, current),
+    rpc<RawLog[]>("eth_getLogs", [{
+      address:   ROUTER,
+      fromBlock: `0x${fromFeed.toString(16)}`,
+      toBlock:   "latest",
+    }]).catch(() => [] as RawLog[]),
+  ]);
+
+  // Deduplicate feed logs → 5 most recent unique txHashes
+  const seen    = new Set<string>();
+  const hashes: string[] = [];
+  for (const log of [...(feedLogs ?? [])].reverse()) {
+    if (!seen.has(log.transactionHash)) {
+      seen.add(log.transactionHash);
+      hashes.push(log.transactionHash);
+      if (hashes.length >= 5) break;
+    }
+  }
+
+  // Fetch tx + receipt in parallel for all 5
+  const pairs = await Promise.all(
+    hashes.map(hash =>
+      Promise.all([
+        rpc<{ from: string; input: string; hash: string }>(
+          "eth_getTransactionByHash", [hash]
+        ),
+        rpc<{ status: string; blockNumber: string }>(
+          "eth_getTransactionReceipt", [hash]
+        ),
+      ]).catch(() => null)
+    )
+  );
+
+  // Collect unique block numbers, fetch them all at once
+  const blockNums = [...new Set(
+    pairs.filter(Boolean).map(p => p![1].blockNumber)
+  )];
+  const blockMap: Record<string, { timestamp: string }> = {};
+  await Promise.all(
+    blockNums.map(async bn => {
+      const b = await rpc<{ timestamp: string }>(
+        "eth_getBlockByNumber", [bn, false]
+      ).catch(() => null);
+      if (b) blockMap[bn] = b;
+    })
+  );
+
+  // Build feed items
+  const feed: Tx[] = pairs
+    .filter(Boolean)
+    .map(p => {
+      const [tx, receipt] = p!;
+      const block = blockMap[receipt.blockNumber];
+      const ts    = block
+        ? new Date(parseInt(block.timestamp, 16) * 1000).toISOString()
+        : new Date().toISOString();
+      const selector = tx.input?.slice(0, 10) ?? "";
+      return {
+        hash:      tx.hash,
+        from:      tx.from,
+        timestamp: ts,
+        method:    selector || null,
+        status:    receipt.status === "0x1" ? "ok" : "failed",
+      };
+    });
+
+  return { feed, sevenDayCount };
+}
+
+// Known 4-byte selectors for the GaslessRouter
+const SELECTORS: Record<string, string> = {
+  "0x": "call",
+};
+function methodLabel(selector: string | null): string {
+  if (!selector) return "execute";
+  if (SELECTORS[selector]) return SELECTORS[selector];
+  // generic: all router calls are executions
+  return "execute";
+}
+
+const METHOD_COLORS: Record<string, string> = {
+  execute:  "text-green-400/70 bg-green-500/[0.10] border-green-500/20",
+  transfer: "text-green-300/70 bg-green-500/[0.08] border-green-500/15",
+  swap:     "text-blue-400/70  bg-blue-500/[0.10]  border-blue-500/20",
+  approve:  "text-amber-400/70 bg-amber-500/[0.10] border-amber-500/20",
+  call:     "text-white/30     bg-white/[0.04]      border-white/10",
+};
+
 function short(addr: string) {
-  return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+  return addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : "—";
 }
 
 function timeAgo(iso: string) {
@@ -28,110 +161,27 @@ function timeAgo(iso: string) {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
-function methodLabel(raw: string | null): string {
-  if (!raw) return "call";
-  const m = raw.toLowerCase();
-  if (m.includes("transfer")) return "transfer";
-  if (m.includes("swap"))     return "swap";
-  if (m.includes("execute"))  return "execute";
-  if (m.includes("approve"))  return "approve";
-  return raw.length > 12 ? raw.slice(0, 12) : raw;
-}
-
-const METHOD_COLORS: Record<string, string> = {
-  transfer: "text-green-400/70 bg-green-500/[0.10] border-green-500/20",
-  swap:     "text-blue-400/70  bg-blue-500/[0.10]  border-blue-500/20",
-  execute:  "text-green-300/70 bg-green-500/[0.08] border-green-500/15",
-  approve:  "text-amber-400/70 bg-amber-500/[0.10] border-amber-500/20",
-  call:     "text-white/30     bg-white/[0.04]      border-white/10",
-};
-
-function methodColor(label: string) {
-  return METHOD_COLORS[label] ?? METHOD_COLORS.call;
-}
-
-/* ── paginate router txs, collect feed + 7-day count ── */
-async function fetchRouterTxs(): Promise<{ feed: Tx[]; sevenDayCount: number }> {
-  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const feed: Tx[] = [];
-  let sevenDayCount = 0;
-  let nextPageParams: Record<string, string> | null = null;
-  let reachedCutoff = false;
-
-  for (let page = 0; page < 15; page++) {
-    const url: string = nextPageParams
-      ? `${TX_URL}&${new URLSearchParams(nextPageParams)}`
-      : TX_URL;
-
-    const res  = await fetch(url);
-    const data = await res.json();
-    const items: {
-      hash: string;
-      timestamp: string;
-      method?: string | null;
-      status?: string;
-      result?: string;
-      from?: { hash: string };
-    }[] = data.items ?? [];
-
-    for (const t of items) {
-      const tx: Tx = {
-        hash:      t.hash,
-        timestamp: t.timestamp,
-        method:    t.method ?? null,
-        status:    t.status ?? t.result ?? "ok",
-        from:      t.from?.hash ?? "",
-      };
-
-      if (feed.length < 5) feed.push(tx);
-
-      if (new Date(t.timestamp).getTime() >= cutoff) {
-        sevenDayCount++;
-      } else {
-        reachedCutoff = true;
-      }
-    }
-
-    if (reachedCutoff || !data.next_page_params || items.length === 0) break;
-    nextPageParams = Object.fromEntries(
-      Object.entries(data.next_page_params as Record<string, unknown>).map(
-        ([k, v]) => [k, String(v)]
-      )
-    );
-  }
-
-  return { feed, sevenDayCount };
-}
-
-/* ── animated number counter ── */
 function CountUp({ target }: { target: number }) {
   const [display, setDisplay] = useState(0);
   const prev = useRef(0);
-
   useEffect(() => {
     if (target === prev.current) return;
-    const from     = prev.current;
-    prev.current   = target;
-    const duration = 1400;
-    const start    = Date.now();
+    const from = prev.current;
+    prev.current = target;
+    const start = Date.now();
     const tick = () => {
-      const elapsed  = Date.now() - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased    = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.floor(from + eased * (target - from)));
-      if (progress < 1) requestAnimationFrame(tick);
+      const p = Math.min((Date.now() - start) / 1400, 1);
+      setDisplay(Math.floor(from + (1 - Math.pow(1 - p, 3)) * (target - from)));
+      if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
   }, [target]);
-
   return (
-    <span
-      style={{
-        background: "linear-gradient(135deg, #22c55e 0%, #4ade80 100%)",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-      }}
-    >
+    <span style={{
+      background: "linear-gradient(135deg,#22c55e 0%,#4ade80 100%)",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+    }}>
       {display.toLocaleString()}
     </span>
   );
@@ -142,25 +192,19 @@ export default function Stats() {
   const [txs, setTxs]           = useState<Tx[]>([]);
   const [loading, setLoading]   = useState(true);
   const [pulse, setPulse]       = useState(false);
-  const prevHashRef             = useRef<string>("");
+  const prevHash                = useRef("");
 
   async function load() {
     try {
-      const { feed, sevenDayCount } = await fetchRouterTxs();
-
+      const { feed, sevenDayCount } = await fetchRouterData();
       setSevenDay(sevenDayCount);
-
-      if (feed[0]?.hash && feed[0].hash !== prevHashRef.current) {
-        prevHashRef.current = feed[0].hash;
+      if (feed[0]?.hash && feed[0].hash !== prevHash.current) {
+        prevHash.current = feed[0].hash;
         if (!loading) { setPulse(true); setTimeout(() => setPulse(false), 800); }
       }
-
       setTxs(feed);
-    } catch {
-      // non-critical
-    } finally {
-      setLoading(false);
-    }
+    } catch { /* non-critical */ }
+    finally { setLoading(false); }
   }
 
   useEffect(() => {
@@ -178,32 +222,18 @@ export default function Stats() {
 
         {/* ── 7-day count ── */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55 }}
+          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{ duration: 0.55 }}
           className="mb-12 text-center"
         >
           <p className="text-[10px] uppercase tracking-[0.3em] text-green-400/60 mb-4">Past 7 days</p>
-
           <div className="text-[4.5rem] sm:text-[6rem] font-black leading-none tracking-tight mb-3">
-            {sevenDay === null ? (
-              <span className="text-white/10">—</span>
-            ) : (
-              <CountUp target={sevenDay} />
-            )}
+            {sevenDay === null ? <span className="text-white/10">—</span> : <CountUp target={sevenDay} />}
           </div>
-
-          <p className="text-sm text-white/30 tracking-wide">
-            gasless transactions processed
-          </p>
-
+          <p className="text-sm text-white/30 tracking-wide">gasless transactions processed</p>
           <div className="mt-4 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/20">
             <motion.div
-              animate={pulse
-                ? { scale: [1, 1.8, 1], opacity: [1, 0.4, 1] }
-                : { opacity: [1, 0.3, 1] }
-              }
+              animate={pulse ? { scale: [1,1.8,1], opacity: [1,0.4,1] } : { opacity: [1,0.3,1] }}
               transition={pulse ? { duration: 0.5 } : { duration: 1.8, repeat: Infinity }}
               className="w-1.5 h-1.5 rounded-full bg-green-400"
             />
@@ -211,28 +241,21 @@ export default function Stats() {
           </div>
         </motion.div>
 
-        {/* ── recent activity feed ── */}
+        {/* ── feed ── */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}
           className="glass-card overflow-hidden"
         >
-          {/* header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.05]">
             <span className="text-[10px] uppercase tracking-[0.2em] text-white/28">Recent activity</span>
             <div className="flex items-center gap-1.5 text-[10px] text-green-400/50">
-              <motion.div
-                animate={{ opacity: [1, 0.25, 1] }}
-                transition={{ duration: 1.6, repeat: Infinity }}
-                className="w-1 h-1 rounded-full bg-green-400"
-              />
+              <motion.div animate={{ opacity:[1,0.25,1] }} transition={{ duration:1.6, repeat:Infinity }}
+                className="w-1 h-1 rounded-full bg-green-400" />
               Live
             </div>
           </div>
 
-          {/* column headers */}
           <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 px-5 py-2.5 border-b border-white/[0.04] text-[9px] uppercase tracking-[0.18em] text-white/18">
             <span>Tx Hash</span>
             <span className="text-right">From</span>
@@ -240,37 +263,30 @@ export default function Stats() {
             <span className="text-right">Time</span>
           </div>
 
-          {/* rows */}
           {loading ? (
             <div className="flex flex-col divide-y divide-white/[0.03]">
               {[...Array(5)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  animate={{ opacity: [0.05, 0.12, 0.05] }}
-                  transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.12 }}
+                <motion.div key={i}
+                  animate={{ opacity:[0.05,0.12,0.05] }}
+                  transition={{ duration:1.6, repeat:Infinity, delay: i * 0.12 }}
                   className="h-12 mx-5 my-1.5 rounded-lg bg-white/[0.05]"
                 />
               ))}
             </div>
           ) : txs.length === 0 ? (
-            <div className="py-16 text-center text-sm text-white/25">
-              No transactions yet
-            </div>
+            <div className="py-16 text-center text-sm text-white/25">No transactions yet</div>
           ) : (
             <AnimatePresence initial={false}>
               {txs.map((tx, i) => {
                 const label = methodLabel(tx.method);
-                const color = methodColor(label);
-                const ok    = tx.status === "ok" || tx.status === "1" || tx.status === "success";
+                const color = METHOD_COLORS[label] ?? METHOD_COLORS.call;
+                const ok    = tx.status === "ok";
                 return (
-                  <motion.a
-                    key={tx.hash}
+                  <motion.a key={tx.hash}
                     href={`https://coston2-explorer.flare.network/tx/${tx.hash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.04 }}
+                    target="_blank" rel="noopener noreferrer"
+                    initial={{ opacity:0, x:-10 }} animate={{ opacity:1, x:0 }}
+                    transition={{ duration:0.3, delay: i * 0.04 }}
                     className="grid grid-cols-[1fr_auto_auto_auto] gap-4 items-center px-5 py-3.5 border-b border-white/[0.04] last:border-0 hover:bg-green-500/[0.04] transition-colors duration-150 group"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -279,9 +295,7 @@ export default function Stats() {
                         {short(tx.hash)}
                       </span>
                     </div>
-                    <span className="text-xs font-mono text-white/28 text-right">
-                      {tx.from ? short(tx.from) : "—"}
-                    </span>
+                    <span className="text-xs font-mono text-white/28 text-right">{short(tx.from)}</span>
                     <span className={`text-[9px] uppercase tracking-[0.12em] font-semibold px-2 py-0.5 rounded-full border ${color} whitespace-nowrap`}>
                       {label}
                     </span>
@@ -294,15 +308,11 @@ export default function Stats() {
             </AnimatePresence>
           )}
 
-          {/* footer */}
           <div className="flex items-center justify-between px-5 py-3 border-t border-white/[0.05] bg-white/[0.01]">
             <span className="text-[10px] text-white/15">Coston2 testnet</span>
-            <a
-              href={`https://coston2-explorer.flare.network/address/${ROUTER}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] uppercase tracking-[0.16em] text-white/20 hover:text-green-400/60 transition-colors"
-            >
+            <a href={`https://coston2-explorer.flare.network/address/${ROUTER}`}
+              target="_blank" rel="noopener noreferrer"
+              className="text-[10px] uppercase tracking-[0.16em] text-white/20 hover:text-green-400/60 transition-colors">
               View all →
             </a>
           </div>
