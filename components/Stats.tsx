@@ -3,10 +3,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 
-const ROUTER   = "0x1214ccD861f187aB017F20617C602638B125689B";
-const BASE_URL = `https://coston2-explorer.flare.network/api/v2/addresses/${ROUTER}`;
-const TX_FEED  = `${BASE_URL}/transactions?limit=10`;
-const TX_PAGE  = `${BASE_URL}/transactions?limit=50`;
+const RELAYER = "0xA823d13118E65DD1beA758a78e9016B6584E037c";
+const ROUTER  = "0x1214ccD861f187aB017F20617C602638B125689B";
+
+// Fetch FROM the relayer wallet — filter where to = router contract
+const RELAYER_TX = `https://coston2-explorer.flare.network/api/v2/addresses/${RELAYER}/transactions?filter=from&limit=50`;
 
 interface Tx {
   hash: string;
@@ -24,7 +25,8 @@ function timeAgo(iso: string) {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
   if (diff < 60)   return `${diff}s ago`;
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
 }
 
 function methodLabel(raw: string | null): string {
@@ -49,51 +51,83 @@ function methodColor(label: string) {
   return METHOD_COLORS[label] ?? METHOD_COLORS.call;
 }
 
-/* ── paginate through transactions and count those in the last 7 days ── */
-async function fetchSevenDayCount(): Promise<number> {
+/* ── fetch all relayer→router txs, paginating until we exit the 7-day window ── */
+async function fetchRelayerTxs(maxPages = 15): Promise<{
+  feed: Tx[];
+  sevenDayCount: number;
+}> {
   const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  let count = 0;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let nextPageParams: Record<string, any> | null = null;
+  const allMatching: Tx[] = [];
+  let sevenDayCount = 0;
+  let nextPageParams: Record<string, string> | null = null;
+  let reachedCutoff = false;
 
-  for (let page = 0; page < 15; page++) {
+  for (let page = 0; page < maxPages; page++) {
     const url: string = nextPageParams
-      ? `${TX_PAGE}&${new URLSearchParams(
-          Object.fromEntries(
-            Object.entries(nextPageParams).map(([k, v]) => [k, String(v)])
-          )
-        )}`
-      : TX_PAGE;
+      ? `${RELAYER_TX}&${new URLSearchParams(nextPageParams)}`
+      : RELAYER_TX;
 
     const res  = await fetch(url);
     const data = await res.json();
-    const items: { timestamp: string }[] = data.items ?? [];
+    const items: {
+      hash: string;
+      timestamp: string;
+      method?: string | null;
+      status?: string;
+      result?: string;
+      from?: { hash: string };
+      to?: { hash: string } | null;
+    }[] = data.items ?? [];
 
-    for (const tx of items) {
-      if (new Date(tx.timestamp).getTime() < cutoff) return count;
-      count++;
+    for (const t of items) {
+      // Only interactions where to = router contract
+      if (t.to?.hash?.toLowerCase() !== ROUTER.toLowerCase()) continue;
+
+      const tx: Tx = {
+        hash:      t.hash,
+        timestamp: t.timestamp,
+        method:    t.method ?? null,
+        status:    t.status ?? t.result ?? "ok",
+        from:      t.from?.hash ?? RELAYER,
+      };
+
+      allMatching.push(tx);
+
+      if (new Date(t.timestamp).getTime() >= cutoff) {
+        sevenDayCount++;
+      } else {
+        reachedCutoff = true;
+      }
     }
 
-    if (!data.next_page_params || items.length === 0) break;
-    nextPageParams = data.next_page_params;
+    if (reachedCutoff || !data.next_page_params || items.length === 0) break;
+    nextPageParams = Object.fromEntries(
+      Object.entries(data.next_page_params as Record<string, unknown>).map(([k, v]) => [k, String(v)])
+    );
   }
 
-  return count;
+  return {
+    feed: allMatching.slice(0, 5),
+    sevenDayCount,
+  };
 }
 
 /* ── animated number counter ── */
 function CountUp({ target }: { target: number }) {
   const [display, setDisplay] = useState(0);
+  const prev = useRef(0);
 
   useEffect(() => {
-    if (target === 0) return;
+    if (target === prev.current) return;
+    const from = prev.current;
+    prev.current = target;
     const duration = 1400;
-    const start    = Date.now();
+    const start = Date.now();
     const tick = () => {
       const elapsed  = Date.now() - start;
       const progress = Math.min(elapsed / duration, 1);
       const eased    = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.floor(eased * target));
+      setDisplay(Math.floor(from + eased * (target - from)));
       if (progress < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
@@ -113,43 +147,24 @@ function CountUp({ target }: { target: number }) {
 }
 
 export default function Stats() {
-  const [txCount, setTxCount] = useState<number | null>(null);
-  const [txs, setTxs]         = useState<Tx[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [pulse, setPulse]     = useState(false);
-  const prevHashRef           = useRef<string>("");
+  const [sevenDay, setSevenDay] = useState<number | null>(null);
+  const [txs, setTxs]           = useState<Tx[]>([]);
+  const [loading, setLoading]   = useState(true);
+  const [pulse, setPulse]       = useState(false);
+  const prevHashRef             = useRef<string>("");
 
   async function load() {
     try {
-      const [sevenDay, txRes] = await Promise.all([
-        fetchSevenDayCount(),
-        fetch(TX_FEED),
-      ]);
-      const txData = await txRes.json();
+      const { feed, sevenDayCount } = await fetchRelayerTxs();
 
-      setTxCount(sevenDay);
+      setSevenDay(sevenDayCount);
 
-      const items: Tx[] = (txData.items ?? []).map((t: {
-        hash: string;
-        timestamp: string;
-        method?: string | null;
-        status?: string;
-        result?: string;
-        from?: { hash: string };
-      }) => ({
-        hash:      t.hash,
-        timestamp: t.timestamp,
-        method:    t.method ?? null,
-        status:    t.status ?? t.result ?? "ok",
-        from:      t.from?.hash ?? "",
-      }));
-
-      if (items[0]?.hash && items[0].hash !== prevHashRef.current) {
-        prevHashRef.current = items[0].hash;
+      if (feed[0]?.hash && feed[0].hash !== prevHashRef.current) {
+        prevHashRef.current = feed[0].hash;
         if (!loading) { setPulse(true); setTimeout(() => setPulse(false), 800); }
       }
 
-      setTxs(items);
+      setTxs(feed);
     } catch {
       // non-critical
     } finally {
@@ -159,7 +174,7 @@ export default function Stats() {
 
   useEffect(() => {
     load();
-    const id = setInterval(load, 20_000);
+    const id = setInterval(load, 15_000);
     return () => clearInterval(id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -181,10 +196,10 @@ export default function Stats() {
           <p className="text-[10px] uppercase tracking-[0.3em] text-green-400/60 mb-4">Past 7 days</p>
 
           <div className="text-[4.5rem] sm:text-[6rem] font-black leading-none tracking-tight mb-3">
-            {txCount === null ? (
+            {sevenDay === null ? (
               <span className="text-white/10">—</span>
             ) : (
-              <CountUp target={txCount} />
+              <CountUp target={sevenDay} />
             )}
           </div>
 
@@ -192,7 +207,6 @@ export default function Stats() {
             gasless transactions processed
           </p>
 
-          {/* live dot */}
           <div className="mt-4 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/20">
             <motion.div
               animate={pulse
@@ -202,7 +216,7 @@ export default function Stats() {
               transition={pulse ? { duration: 0.5 } : { duration: 1.8, repeat: Infinity }}
               className="w-1.5 h-1.5 rounded-full bg-green-400"
             />
-            Live · updates every 20s
+            Live · updates every 15s
           </div>
         </motion.div>
 
@@ -216,7 +230,10 @@ export default function Stats() {
         >
           {/* header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.05]">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-white/28">Recent activity</span>
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.2em] text-white/28">Recent activity</span>
+              <span className="ml-2 text-[9px] text-white/15">relayer → router</span>
+            </div>
             <div className="flex items-center gap-1.5 text-[10px] text-green-400/50">
               <motion.div
                 animate={{ opacity: [1, 0.25, 1] }}
@@ -238,7 +255,7 @@ export default function Stats() {
           {/* rows */}
           {loading ? (
             <div className="flex flex-col divide-y divide-white/[0.03]">
-              {[...Array(6)].map((_, i) => (
+              {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={i}
                   animate={{ opacity: [0.05, 0.12, 0.05] }}
@@ -275,7 +292,7 @@ export default function Stats() {
                       </span>
                     </div>
                     <span className="text-xs font-mono text-white/28 text-right">
-                      {tx.from ? short(tx.from) : "—"}
+                      {short(RELAYER)}
                     </span>
                     <span className={`text-[9px] uppercase tracking-[0.12em] font-semibold px-2 py-0.5 rounded-full border ${color} whitespace-nowrap`}>
                       {label}
@@ -293,7 +310,7 @@ export default function Stats() {
           <div className="flex items-center justify-between px-5 py-3 border-t border-white/[0.05] bg-white/[0.01]">
             <span className="text-[10px] text-white/15">Coston2 testnet</span>
             <a
-              href={`https://coston2-explorer.flare.network/address/${ROUTER}`}
+              href={`https://coston2-explorer.flare.network/address/${RELAYER}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] uppercase tracking-[0.16em] text-white/20 hover:text-green-400/60 transition-colors"
