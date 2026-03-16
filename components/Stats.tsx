@@ -176,12 +176,10 @@ export default function Stats() {
                 const color = METHOD_COLORS[label] ?? METHOD_COLORS.execute;
                 const ok    = tx.status === "ok" || tx.status === "1" || tx.status === "success";
                 return (
-                  <motion.a key={tx.hash}
-                    href={`https://coston2-explorer.flare.network/tx/${tx.hash}`}
-                    target="_blank" rel="noopener noreferrer"
+                  <motion.div key={tx.hash}
                     initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.04 }}
-                    className="grid grid-cols-[1fr_auto_auto_auto] gap-4 items-center px-5 py-3.5 border-b border-white/[0.04] last:border-0 hover:bg-green-500/[0.04] transition-colors duration-150 group"
+                    className="grid grid-cols-[1fr_auto_auto_auto] gap-4 items-center px-5 py-3.5 border-b border-white/[0.04] last:border-0"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${ok ? "bg-green-400/65" : "bg-red-400/65"}`} />
@@ -196,19 +194,14 @@ export default function Stats() {
                     <span className="text-[11px] text-white/20 text-right whitespace-nowrap">
                       {timeAgo(tx.timestamp)}
                     </span>
-                  </motion.a>
+                  </motion.div>
                 );
               })}
             </AnimatePresence>
           )}
 
-          <div className="flex items-center justify-between px-5 py-3 border-t border-white/[0.05] bg-white/[0.01]">
+          <div className="px-5 py-3 border-t border-white/[0.05] bg-white/[0.01]">
             <span className="text-[10px] text-white/15">Coston2 testnet</span>
-            <a href={`https://coston2-explorer.flare.network/address/${ROUTER}`}
-              target="_blank" rel="noopener noreferrer"
-              className="text-[10px] uppercase tracking-[0.16em] text-white/20 hover:text-green-400/60 transition-colors">
-              View all →
-            </a>
           </div>
         </motion.div>
 
