@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "Contract Call — Zedkr Docs" };
+export const metadata = { title: "Contract Call | Zedkr Docs" };
 
 const code = `import { Zedkr } from "zedkr";
 const client   = await Zedkr.create({ provider });
@@ -22,7 +22,7 @@ export default function TxCall() {
       <h1 className="text-4xl font-bold text-white mb-3">Contract Call</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
         Call any smart contract function without FLR gas. Stake tokens, mint NFTs, vote on
-        governance — any on-chain action, fully gasless.
+        governance, any on-chain action, fully gasless.
       </p>
 
       <CodeBlock code={code} language="typescript" />

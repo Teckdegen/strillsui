@@ -1,9 +1,9 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock } from "@/components/docs/DocPage";
 
-export const metadata = { title: "All Transactions — Zedkr SDK" };
+export const metadata = { title: "All Transactions | Zedkr SDK" };
 
 const setupCode = `import { Zedkr } from "zedkr";
-const client = await Zedkr.create({ provider }); // pass your ethers provider — that's all`;
+const client = await Zedkr.create({ provider }); // pass your ethers provider - that's all`;
 
 const txs = [
   {
@@ -13,7 +13,7 @@ const txs = [
   },
   {
     title: "Send all",
-    sub: "Drain entire balance — fee auto-deducted",
+    sub: "Drain entire balance, fee auto-deducted",
     code: `const result = await client.transferAll(signer, "0xRecipient", "0xToken", 18);`,
   },
   {
@@ -35,13 +35,13 @@ export default function AllTransactions() {
 
       <h1 className="text-4xl font-bold text-white mb-3">All Transactions</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
-        Every gasless operation follows the same pattern. Init the client once, call any method — done.
+        Every gasless operation follows the same pattern. Init the client once, call any method, done.
       </p>
 
-      <h2 className="text-xl font-semibold text-white mb-3">Setup — once</h2>
+      <h2 className="text-xl font-semibold text-white mb-3">Setup - once</h2>
       <CodeBlock code={setupCode} language="typescript" />
 
-      <h2 className="text-xl font-semibold text-white mt-10 mb-6">All operations — one line each</h2>
+      <h2 className="text-xl font-semibold text-white mt-10 mb-6">All operations - one line each</h2>
       <div className="flex flex-col gap-8">
         {txs.map(({ title, sub, code }, i) => (
           <div key={title}>

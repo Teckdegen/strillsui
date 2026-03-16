@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "swap() — Zedkr SDK" };
+export const metadata = { title: "swap() | Zedkr SDK" };
 
 const usageCode = `import { Zedkr } from "zedkr";
 const client   = await Zedkr.create({ provider });
@@ -29,13 +29,13 @@ export default function SdkSwap() {
       <h1 className="text-4xl font-bold text-white mb-3">swap()</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
         Gasless DEX swap through any Uniswap V2-compatible router on Flare. Encode the calldata
-        with ethers.js — you keep full control over routing, slippage, and deadlines.
+        with ethers.js, you keep full control over routing, slippage, and deadlines.
       </p>
 
       <h2 className="text-xl font-semibold text-white mb-3">Usage</h2>
       <CodeBlock code={usageCode} language="typescript" />
 
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Full example — FXRP → USDT via BlazeSwap</h2>
+      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Full example - FXRP to USDT via BlazeSwap</h2>
       <CodeBlock code={encodeCode} language="typescript" />
 
       <Callout type="warning">

@@ -15,7 +15,7 @@ export default function Footer() {
           Powered by Flare
         </span>
         <span className="text-center text-white/45 sm:text-right">
-          © {new Date().getFullYear()} Zedkr — gasless infrastructure for DeFi wallets.
+          © {new Date().getFullYear()} Zedkr, gasless infrastructure for DeFi wallets.
         </span>
       </motion.div>
     </footer>

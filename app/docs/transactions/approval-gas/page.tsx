@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "Approval & Gas — Zedkr Docs" };
+export const metadata = { title: "Approval & Gas | Zedkr Docs" };
 
 const approveCode = `import { ethers } from "ethers";
 
@@ -18,14 +18,14 @@ export default function TxApproval() {
       <h1 className="text-4xl font-bold text-white mb-3">Approval &amp; Gas</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
         There is exactly one transaction that requires FLR gas: the initial ERC20 approval.
-        After that, every interaction through Zedkr is completely gasless — forever.
+        After that, every interaction through Zedkr is completely gasless, forever.
       </p>
 
       <h2 className="text-xl font-semibold text-white mb-3">One-time approval</h2>
       <CodeBlock code={approveCode} language="typescript" />
 
       <Callout type="tip">
-        Tokens with EIP-2612 permit support (like some USDT versions) skip this entirely —
+        Tokens with EIP-2612 permit support (like some USDT versions) skip this entirely,
         the SDK handles permit signing automatically. No FLR ever needed.
       </Callout>
 
@@ -33,7 +33,7 @@ export default function TxApproval() {
       <div className="flex flex-col gap-3">
         {[
           "One approval per fee token (USDT, FXRP, or WC2FLR)",
-          "Approve the Zedkr router address — not any other contract",
+          "Approve the Zedkr router address, not any other contract",
           "MaxUint256 means you never need to re-approve",
           "The fee cap in the router limits the maximum the router can pull per transaction",
         ].map((rule, i) => (

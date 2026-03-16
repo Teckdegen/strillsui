@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "Getting Started — Zedkr Docs" };
+export const metadata = { title: "Getting Started | Zedkr Docs" };
 
 const installCode = `npm install zedkr ethers`;
 
@@ -44,7 +44,7 @@ export default function GettingStarted() {
           {[
             "Node.js 18+ or a modern browser with MetaMask",
             "A wallet with tokens (USDT, FXRP, or WC2FLR)",
-            "One-time token approval — after that, zero FLR forever",
+            "One-time token approval, after that, zero FLR forever",
           ].map((req) => (
             <li key={req} className="flex items-start gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
@@ -54,16 +54,16 @@ export default function GettingStarted() {
         </ul>
       </div>
 
-      <h2 className="text-xl font-semibold text-white mb-3">Step 1 — Install</h2>
+      <h2 className="text-xl font-semibold text-white mb-3">Step 1 - Install</h2>
       <CodeBlock code={installCode} language="bash" />
 
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Step 2 — Create a client</h2>
+      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Step 2 - Create a client</h2>
       <p className="text-sm text-white/45 leading-relaxed mb-4">
-        Pass your provider. The relayer URL and router address are baked in — no extra config.
+        Pass your provider. The relayer URL and router address are baked in, no extra config.
       </p>
       <CodeBlock code={initCode} language="typescript" />
 
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Step 3 — One-time token approval</h2>
+      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Step 3 - One-time token approval</h2>
       <p className="text-sm text-white/45 leading-relaxed mb-4">
         Approve once per token. This is the only transaction that requires FLR gas.
         Every transaction after this is completely gasless.
@@ -71,14 +71,14 @@ export default function GettingStarted() {
       <CodeBlock code={approveCode} language="typescript" />
 
       <Callout type="info">
-        Tokens with EIP-2612 permit support skip this step entirely — the SDK handles it automatically.
+        Tokens with EIP-2612 permit support skip this step entirely, the SDK handles it automatically.
       </Callout>
 
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Step 4 — Send your first transaction</h2>
+      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Step 4 - Send your first transaction</h2>
       <CodeBlock code={firstTxCode} language="typescript" />
 
       <Callout type="tip">
-        That&apos;s it. Same 5-line pattern works for every transaction type — transfers, swaps, and contract calls.
+        That&apos;s it. Same 5-line pattern works for every transaction type, transfers, swaps, and contract calls.
       </Callout>
 
       <DocNav

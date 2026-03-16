@@ -14,7 +14,7 @@ interface Tx {
 }
 
 function short(addr: string) {
-  return addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : "—";
+  return addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : "";
 }
 
 function timeAgo(iso: string) {
@@ -114,7 +114,7 @@ export default function Stats() {
           <p className="text-[10px] uppercase tracking-[0.3em] text-green-400/60 mb-4">Past 7 days</p>
           <div className="text-[4.5rem] sm:text-[6rem] font-black leading-none tracking-tight mb-3">
             {sevenDay === null
-              ? <span className="text-white/10">—</span>
+              ? <span className="text-white/10"></span>
               : <CountUp target={sevenDay} />
             }
           </div>

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const RELAYER = "0xA823d13118E65DD1beA758a78e9016B6584E037c";
 const ROUTER  = "0x1214ccD861f187aB017F20617C602638B125689B";
 
-// No query params — Coston2 Blockscout rejects unknown fields
+// No query params - Coston2 Blockscout rejects unknown fields
 const RELAYER_TX_URL = `https://coston2-explorer.flare.network/api/v2/addresses/${RELAYER}/transactions`;
 
 let cache: { data: unknown; at: number } | null = null;

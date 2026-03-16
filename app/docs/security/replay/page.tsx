@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "Replay Protection — Zedkr Docs" };
+export const metadata = { title: "Replay Protection | Zedkr Docs" };
 
 const nonceCode = `// Each user has an incrementing nonce stored on-chain
 // Once an intent is executed, that nonce is consumed

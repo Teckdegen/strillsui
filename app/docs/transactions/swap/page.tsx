@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "DEX Swap — Zedkr Docs" };
+export const metadata = { title: "DEX Swap | Zedkr Docs" };
 
 const code = `import { Zedkr } from "zedkr";
 const client   = await Zedkr.create({ provider });
@@ -25,13 +25,13 @@ export default function TxSwap() {
 
       <h1 className="text-4xl font-bold text-white mb-3">DEX Swap</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
-        Swap tokens through any Uniswap V2-compatible DEX on Flare — without holding FLR.
+        Swap tokens through any Uniswap V2-compatible DEX on Flare, without holding FLR.
         Encode your own calldata for full control over routing, slippage, and deadlines.
       </p>
 
       <CodeBlock code={code} language="typescript" />
 
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Full example — FXRP → USDT</h2>
+      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Full example - FXRP to USDT</h2>
       <CodeBlock code={encodeCode} language="typescript" />
 
       <Callout type="warning">

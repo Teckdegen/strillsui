@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "How Signatures Work — Zedkr Docs" };
+export const metadata = { title: "How Signatures Work | Zedkr Docs" };
 
 const signCode = `// The SDK signs this Intent struct using EIP-712
 {
@@ -20,7 +20,7 @@ export default function SecuritySigs() {
       <h1 className="text-4xl font-bold text-white mb-3">How Signatures Work</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
         Every Zedkr transaction is authorized by an EIP-712 typed signature. The user&apos;s private
-        key never leaves their wallet — the relayer only ever sees the signed intent, not the key.
+        key never leaves their wallet, the relayer only ever sees the signed intent, not the key.
       </p>
 
       <h2 className="text-xl font-semibold text-white mb-3">The Intent struct</h2>
@@ -30,10 +30,10 @@ export default function SecuritySigs() {
       <div className="flex flex-col gap-3 mb-6">
         {[
           { label: "Non-custodial",    desc: "The relayer never holds your keys or tokens." },
-          { label: "Bound to chain",   desc: "The domain separator includes the chain ID — signatures can't be replayed on other networks." },
+          { label: "Bound to chain",   desc: "The domain separator includes the chain ID, signatures can't be replayed on other networks." },
           { label: "Deadline",         desc: "Intents expire at a user-specified timestamp. Stale signatures can't be executed." },
           { label: "Fee cap",          desc: "maxFee in the intent limits how much the router can deduct. The relayer can't charge more." },
-          { label: "Nonce",            desc: "Each nonce is consumed once — the same intent can never execute twice." },
+          { label: "Nonce",            desc: "Each nonce is consumed once, the same intent can never execute twice." },
         ].map(({ label, desc }) => (
           <div key={label} className="glass rounded-xl px-4 py-3 flex gap-3">
             <span className="text-sm font-semibold text-green-400 w-32 shrink-0">{label}</span>

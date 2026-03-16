@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "Send All — Zedkr Docs" };
+export const metadata = { title: "Send All | Zedkr Docs" };
 
 const code = `import { Zedkr } from "zedkr";
 const client = await Zedkr.create({ provider });
@@ -21,7 +21,7 @@ export default function TxSendAll() {
       <CodeBlock code={code} language="typescript" />
 
       <Callout type="tip">
-        <strong>Zero wallet</strong> — if fee token = send token (e.g. USDT → USDT), the user&apos;s
+        <strong>Zero wallet</strong> - if fee token = send token (e.g. USDT to USDT), the user&apos;s
         balance lands at exactly 0. No dust left behind.
       </Callout>
 

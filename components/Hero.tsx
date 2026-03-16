@@ -167,7 +167,7 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* lines — only 3 */}
+      {/* lines - only 3 */}
       <div className="pointer-events-none absolute inset-0">
         <Line x1={10} y1={10} x2={50} y2={50} delay={0} />
         <Line x1={88} y1={10} x2={50} y2={50} delay={0.6} />
@@ -180,20 +180,6 @@ export default function Hero() {
       {/* center content */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center text-center px-6">
 
-        {/* badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-8 inline-flex items-center gap-2.5 rounded-full border border-green-500/20 bg-green-500/[0.07] px-4 py-1.5 text-[10px] tracking-[0.22em] text-green-300/70 uppercase"
-        >
-          <motion.span
-            animate={{ opacity: [1, 0.15, 1] }}
-            transition={{ duration: 1.7, repeat: Infinity }}
-            className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"
-          />
-          Live on Flare Coston2
-        </motion.div>
 
         {/* looping typewriter headline */}
         <motion.h1
@@ -203,13 +189,13 @@ export default function Hero() {
           className="text-[3rem] sm:text-[4.8rem] md:text-[6rem] font-black leading-[1.08] tracking-[-0.035em]"
           style={{ fontFamily: "'SF Pro Display', 'Inter', system-ui, sans-serif", minHeight: "2.2em" }}
         >
-          {/* line 1 — white */}
+          {/* line 1 - white */}
           <div className="block text-white">
             {TEXT1.slice(0, chars1)}
             {showCursor && !cursorOnLine2 && <Cursor />}
           </div>
 
-          {/* line 2 — green gradient */}
+          {/* line 2 - green gradient */}
           <div
             className="block"
             style={{
@@ -231,7 +217,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 1.6 }}
           className="mt-6 max-w-xs text-sm text-white/35 leading-[1.9]"
         >
-          Send, swap, call — without FLR.
+          Send, swap, call without FLR.
           <br />Pay in USDT, FXRP, or WC2FLR.
         </motion.p>
 

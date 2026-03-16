@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "ERC20 Transfer — Zedkr Docs" };
+export const metadata = { title: "ERC20 Transfer | Zedkr Docs" };
 
 const code = `import { Zedkr } from "zedkr";
 const client = await Zedkr.create({ provider });
@@ -15,7 +15,7 @@ export default function TxTransfer() {
       <h1 className="text-4xl font-bold text-white mb-3">ERC20 Transfer</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
         Send any ERC20 token to a recipient. The fee is pulled automatically from the user&apos;s
-        chosen fee token. The recipient gets the exact amount — nothing extra required.
+        chosen fee token. The recipient gets the exact amount, nothing extra required.
       </p>
 
       <CodeBlock code={code} language="typescript" />
@@ -23,7 +23,7 @@ export default function TxTransfer() {
       <h2 className="text-xl font-semibold text-white mt-8 mb-4">What happens on-chain</h2>
       <div className="flex flex-col gap-3 mb-6">
         {[
-          "User signs an EIP-712 intent off-chain — no gas, no broadcast",
+          "User signs an EIP-712 intent off-chain, no gas, no broadcast",
           "Zedkr relayer validates the signature and submits the transaction",
           "Fee is pulled from the user's fee token balance",
           "The ERC20 transfer executes atomically in the same transaction",

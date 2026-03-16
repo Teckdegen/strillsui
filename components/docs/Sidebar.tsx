@@ -20,7 +20,6 @@ const nav = [
     title: "SDK Reference",
     items: [
       { label: "transfer()", href: "/docs/sdk" },
-      { label: "transferAll()", href: "/docs/sdk/transfer-all" },
       { label: "swap()", href: "/docs/sdk/swap" },
       { label: "call()", href: "/docs/sdk/call" },
       { label: "All Transactions", href: "/docs/sdk/fee-quote" },
@@ -137,7 +136,7 @@ export function MobileMenuBar() {
 
   return (
     <>
-      {/* Fixed top bar — mobile only, does NOT affect flex layout */}
+      {/* Fixed top bar - mobile only, does NOT affect flex layout */}
       <div className="lg:hidden fixed top-16 left-0 right-0 z-30 flex items-center justify-between bg-[#080808]/95 backdrop-blur-xl border-b border-green-500/[0.08] px-4 py-3">
         <div className="flex items-center gap-2.5">
           <div

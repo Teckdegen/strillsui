@@ -9,7 +9,7 @@ const txns = [
     icon: Send,
     title: "ERC20 Transfer",
     description:
-      "Send USDT, FXRP, WFLR, or any ERC20 token to any address on Flare — no FLR in your wallet required.",
+      "Send USDT, FXRP, WFLR, or any ERC20 token to any address on Flare, no FLR in your wallet required.",
     tags: ["USDT", "FXRP", "Any ERC20"],
     href: "/docs/transactions",
     color: "#16a34a",
@@ -28,7 +28,7 @@ const txns = [
     title: "DEX Swap",
     description:
       "Swap any token pair on BlazeSwap via the Uniswap V2 router. Live quote with 2% slippage protection, all gasless.",
-    tags: ["BlazeSwap", "FXRP → USDT"],
+    tags: ["BlazeSwap", "FXRP to USDT"],
     href: "/docs/transactions/swap",
     color: "#4ade80",
   },
@@ -36,7 +36,7 @@ const txns = [
     icon: FileCode2,
     title: "Contract Call",
     description:
-      "Call any smart contract function on Flare — DeFi protocols, NFTs, staking contracts — without paying FLR gas.",
+      "Call any smart contract function on Flare, DeFi protocols, NFTs, staking contracts, without paying FLR gas.",
     tags: ["Any contract", "Any function"],
     href: "/docs/transactions/call",
     color: "#15803d",
@@ -152,7 +152,7 @@ export default function Transactions() {
             <div>
               <h3 className="text-base font-bold text-white mb-1">Any Contract</h3>
               <p className="text-sm text-white/40">
-                The router supports any whitelisted contract — DeFi, NFTs, staking, and more.
+                The router supports any whitelisted contract, DeFi, NFTs, staking, and more.
               </p>
             </div>
             <Link

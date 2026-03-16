@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "Introduction — Zedkr Docs" };
+export const metadata = { title: "Introduction | Zedkr Docs" };
 
 const installCode = `npm install zedkr ethers`;
 
@@ -23,7 +23,7 @@ export default function DocsIntro() {
           Gasless Transactions on Flare
         </h1>
         <p className="text-lg text-white/50 leading-relaxed max-w-2xl">
-          Send tokens, swap on DEXes, call any contract — without holding FLR.
+          Send tokens, swap on DEXes, call any contract, without holding FLR.
           Fees are paid in USDT, FXRP, or WC2FLR. Five lines of code. That&apos;s it.
         </p>
       </div>
@@ -32,7 +32,7 @@ export default function DocsIntro() {
         {[
           { title: "Zero FLR",      desc: "Users never need native gas. Sign once, Zedkr handles the rest." },
           { title: "Any Fee Token", desc: "Pay in USDT, FXRP, or WC2FLR. Your choice at signing time." },
-          { title: "5 Lines",       desc: "Pass your provider — that's all the config you'll ever need." },
+          { title: "5 Lines",       desc: "Pass your provider, that's all the config you'll ever need." },
         ].map(({ title, desc }) => (
           <div key={title} className="glass p-4 rounded-xl">
             <div className="text-sm font-semibold text-white mb-1">{title}</div>
@@ -45,9 +45,9 @@ export default function DocsIntro() {
       <div className="flex flex-col gap-3 mb-10">
         {[
           { n: "1", label: "User signs an intent",        sub: "EIP-712 typed data, off-chain" },
-          { n: "2", label: "SDK sends to Zedkr relayer",  sub: "Built-in — no URL to configure" },
+          { n: "2", label: "SDK sends to Zedkr relayer",  sub: "Built-in, no URL to configure" },
           { n: "3", label: "Relayer submits on-chain",    sub: "Pays FLR gas from relayer wallet" },
-          { n: "4", label: "Fee pulled, action executed", sub: "Atomic — sign once, done" },
+          { n: "4", label: "Fee pulled, action executed", sub: "Atomic, sign once, done" },
         ].map(({ n, label, sub }) => (
           <div key={n} className="flex items-center gap-4">
             <div className="w-8 h-8 rounded-full bg-green-600/20 border border-green-600/30 flex items-center justify-center shrink-0 text-sm font-bold text-green-400">
@@ -66,7 +66,7 @@ export default function DocsIntro() {
       <CodeBlock code={quickCode} language="typescript" />
 
       <Callout type="tip">
-        The relayer and router are built into the SDK. Pass your provider — nothing else.
+        The relayer and router are built into the SDK. Pass your provider, nothing else.
       </Callout>
 
       <DocNav next={{ label: "Getting Started", href: "/docs/getting-started" }} />

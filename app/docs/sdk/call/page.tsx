@@ -1,6 +1,6 @@
 import { PageWrapper, Breadcrumb, DocNav, CodeBlock, Callout } from "@/components/docs/DocPage";
 
-export const metadata = { title: "call() — Zedkr SDK" };
+export const metadata = { title: "call() | Zedkr SDK" };
 
 const usageCode = `import { Zedkr } from "zedkr";
 const client   = await Zedkr.create({ provider });
@@ -22,13 +22,13 @@ export default function SdkCall() {
       <h1 className="text-4xl font-bold text-white mb-3">call()</h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
         Call any smart contract function without FLR gas. Encode the calldata with ethers.js and
-        pass the target address — staking, governance, NFT mints, anything.
+        pass the target address, staking, governance, NFT mints, anything.
       </p>
 
       <h2 className="text-xl font-semibold text-white mb-3">Usage</h2>
       <CodeBlock code={usageCode} language="typescript" />
 
-      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Example — staking contract</h2>
+      <h2 className="text-xl font-semibold text-white mt-8 mb-3">Example - staking contract</h2>
       <CodeBlock code={encodeCode} language="typescript" />
 
       <Callout type="warning">
